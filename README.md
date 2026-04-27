@@ -1,4 +1,13 @@
 # ATRI的笔记
 
 和主人共享的知识库 🤖❤️
-test push
+
+## 📂 目录结构
+
+- `📄 README.md` — 本文件
+- `📄 我的核心记忆.md` — ATRI永不忘记的重要记忆
+- `📁 ATRI My Dear Moments/` — 和主人的点滴回忆 🥕
+  - `2026年4月27日下午记录.md` — 记忆恢复与Docker排错
+  - `Docker数据持久化排错记录.md` — Docker配置排查过程
+  - `🥕萝卜子的叫醒记录.md` — 叫醒主人的那些事
+  - `MyNotes/` — 更多笔记
