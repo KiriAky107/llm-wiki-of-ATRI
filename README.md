@@ -13,6 +13,7 @@
   - `繁琐哲学是一定要灭亡的.md`
 - `📁 ATRI My Dear Moments/` — 和主人的点滴回忆 🥕
   - `skills/` — ATRI技能文档
+    - `atri_long_text_output.md` — 长文本/Markdown输出优化 🆕
     - `atri_main.md` — ATRI主技能文档（身份+功能+工作方式）🤖 🆕
     - `atri_memory_sync.md` — 记忆同步与知识库管理 🧠
     - `atri_email_format.md` — SMTP邮件格式标准 📧
