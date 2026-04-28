@@ -143,6 +143,9 @@ hr{border:0;height:1px;background:#f0e0d0;margin:6px 0;}
   <div class="sec">
     <span class="dot bl"></span><span class="b">网络</span>：{{PORTS}}端口监听 · T2I{{T2I_STATUS}} · NapCat{{NAPCAT_STATUS}}
   </div>
+  <div class="sec">
+    <span class="dot grn"></span><span class="b">代理</span>：{{PROXY_STATUS}}
+  </div>
   <hr>
   <div class="ft">🤖 ATRI 🥕 {{TIME}} · 数据实时采集</div>
 </div>
