@@ -96,13 +96,18 @@ curl -X POST "http://服务器IP:8999/text2img/generate" \\
 ### Step 4: 下载图片并发送到QQ
 
 ```python
-# 从T2I返回的图片URL下载到容器临时目录
-from datetime import datetime
+# 通过Docker网关IP下载图片到容器本地
 import urllib.request
+T2I_HOST = "172.17.0.1"  # Docker网关IP
+T2I_PORT = 8999
 
+# 调用T2I渲染（调用/text2img/generate获取img_id）
+# ...
+
+# 下载生成的图片到本地
+from datetime import datetime
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-# T2I返回的图片URL
-img_url = f"http://T2I服务地址:8999/text2img/data/{img_id}"
+img_url = f"http://{T2I_HOST}:{T2I_PORT}/text2img/data/{img_id}"
 
 with urllib.request.urlopen(img_url, timeout=30) as resp:
     img_data = resp.read()
@@ -118,7 +123,16 @@ send_message_to_user(messages=[{
 }])
 ```
 
-> T2I服务地址：在宿主机上用 `localhost`，从AstrBot容器内访问用Docker网关IP（如 `172.17.0.1`）
+### 备用：直接发送图片URL
+
+如果NapCat能访问T2I服务（同一台服务器），也可以用URL：
+
+```python
+send_message_to_user(messages=[{
+    "type": "image",
+    "url": f"http://服务器IP:{T2I_PORT}/text2img/data/{img_id}"
+}])
+```
 
 ### Step 5: 备用方案
 
