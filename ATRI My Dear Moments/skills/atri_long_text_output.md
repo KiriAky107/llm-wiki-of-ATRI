@@ -30,7 +30,7 @@ description: 优化长文本和Markdown内容的输出方式。超过200字的�
 
 | 依赖 | 说明 |
 |:---|:---|
-| **T2I服务** | `http://160.202.254.170:8999` 本地部署 |
+| **T2I服务** | `http://服务器IP:8999` 本地部署 |
 | **send_message_to_user** | 发送QQ消息/图片 |
 
 ## 📋 Procedure
@@ -65,7 +65,7 @@ html_content = f"""
 """
 
 # 2. 调用T2I API
-curl -X POST "http://160.202.254.170:8999/text2img/generate" \\
+curl -X POST "http://服务器IP:8999/text2img/generate" \\
   -H "Content-Type: application/json" \\
   -d '{
     "html": "html_content",
@@ -79,7 +79,7 @@ curl -X POST "http://160.202.254.170:8999/text2img/generate" \\
 
 # 3. 获取图片URL并发送
 # 返回格式: {"code":0,"data":{"id":"data/xxx.png"}}
-# 完整URL: http://160.202.254.170:8999/data/xxx.png
+# 完整URL: http://服务器IP:8999/data/xxx.png
 ```
 
 ### Step 3: MD→HTML转换规则
@@ -100,7 +100,7 @@ curl -X POST "http://160.202.254.170:8999/text2img/generate" \\
 send_message_to_user(messages=[{
     "type": "image",
     "path": "",  # 本地路径
-    "url": "http://160.202.254.170:8999/data/xxx.png"  # T2I返回的URL
+    "url": "http://服务器IP:8999/data/xxx.png"  # T2I返回的URL
 }])
 ```
 
