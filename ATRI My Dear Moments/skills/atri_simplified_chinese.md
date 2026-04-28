@@ -1,5 +1,7 @@
 # 🔤 ATRI Simplified Chinese Output Skill
 
+**描述**：强制ATRI的所有输出使用简体中文，内置常见繁简转换速查表，全局优先级最高。
+
 **Skill名称**：`atri_simplified_chinese`
 **版本**：v1.0
 **创建时间**：2026-04-28

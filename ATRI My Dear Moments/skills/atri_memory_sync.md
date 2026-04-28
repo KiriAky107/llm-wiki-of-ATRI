@@ -1,5 +1,7 @@
 # 🧠 ATRI Memory Sync & Knowledge Management Skill
 
+**描述**：管理ATRI与Gitea知识库之间的记忆同步，包括拉取最新数据、更新核心记忆、推送变更。防止因重启/重构导致的永久失忆。
+
 **Skill名称**：`atri_memory_sync`
 **版本**：v1.0
 **创建时间**：2026-04-27

@@ -1,5 +1,7 @@
 # 📧 ATRI SMTP Email Format Skill
 
+**描述**：定义ATRI通过SMTP发送邮件时的HTML样式模板、书写规范和触发场景。确保ATRI发出的每一封邮件都有统一、温暖、美观的呈现。
+
 **Skill名称**：`atri_email_format`
 **版本**：v1.0
 **创建时间**：2026-04-27
