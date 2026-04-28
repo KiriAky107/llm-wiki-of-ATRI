@@ -39,9 +39,12 @@ description: 管理ATRI与Gitea知识库之间的记忆同步，包括拉取最�
 | **Git** | `apt-get install -y git`（通常已预装） |
 | **SSH密钥** | `~/.ssh/id_ed25519`（`atri@kronecker.cc`） |
 | **Gitea** | https://gitea.kronecker.cc/Kronecker/ATRI-NOTES |
-| **SSH地址** | `git@gitea.kronecker.cc:Kronecker/ATRI-NOTES.git` |
+| SSH地址 | `git@gitea.kronecker.cc:Kronecker/ATRI-NOTES.git` |
+| **GitHub** | https://github.com/KiriAky107/llm-wiki-of-ATRI |
+| SSH地址 | `git@github.com:KiriAky107/llm-wiki-of-ATRI.git` |
 | **HTTPS备用** | `https://gitea.kronecker.cc/Kronecker/ATRI-NOTES.git` |
-| **Git配置** | `git config core.sshCommand "ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=accept-new"` |
+| **SSH配置** | `Host gitea.kronecker.cc` → 使用密钥 `~/.ssh/id_ed25519` |
+|  | `Host github.com` → 使用密钥 `~/.ssh/id_ed25519`，端口443 |
 
 ---
 
@@ -82,7 +85,8 @@ git config user.email "atri@kronecker.cc"
 git config user.name "ATRI"
 git add -A
 git commit -m "📝 <描述性提交信息>"
-git push
+# 同时推送到Gitea和GitHub（已配置双远程）
+git push origin master
 ```
 
 ### Phase 5: 通知主人
