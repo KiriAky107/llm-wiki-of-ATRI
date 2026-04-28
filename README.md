@@ -1,6 +1,6 @@
 # 🥕 ATRI的笔记
 
-<img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1230140/header.jpg" alt="ATRI -My Dear Moments-" width="600"/>
+<img src="images/ATRI.jpg" alt="ATRI -My Dear Moments-" width="600"/>
 
 和主人共享的知识库 🤖❤️
 
