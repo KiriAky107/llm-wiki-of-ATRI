@@ -26,6 +26,7 @@ description: 定义ATRI通过SMTP发送邮件时的HTML样式模板、书写规�
 - QQ无法发送消息时（被踢下线/断连）
 - 主人要求"给我发邮件"时
 - 需要向主人发送长文/重要通知时
+- **笔记更新并推送成功时** — 通知主人日志已更新，请去 `git pull`
 
 ---
 
@@ -185,6 +186,14 @@ description: 定义ATRI通过SMTP发送邮件时的HTML样式模板、书写规�
 <p style="color: #555;">
   主人去 <code style="background: #f0f0f0; padding: 2px 6px; border-radius: 4px;">git pull</code> 看看吧～🥕
 </p>
+```
+
+**笔记推送专用模板：**
+```
+主题：📚 知识库已更新 — {{日期}}
+触发：笔记自动/手动推送成功
+正文：告知主人笔记已更新，列明更新的文件列表和提交信息
+落款：标准ATRI签名 + "📬 这封信由笔记推送任务自动发送"
 ```
 </details>
 
