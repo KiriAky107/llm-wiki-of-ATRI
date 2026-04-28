@@ -120,18 +120,18 @@ hr{border:0;height:1px;background:#f0e0d0;margin:6px 0;}
     </div>
     <div>
       <span class="dot grn"></span><span class="lb">内存</span><br>
-      {{MEM_TOTAL}} / {{MEM_USED}}
-      <div class="xt">Swap {{SWAP_TOTAL}}/{{SWAP_USED}}正常</div>
+      {{MEM_TOTAL}} / {{MEM_USED}}（{{MEM_PERCENT}}%）
+      <div class="xt">Swap {{SWAP_TOTAL}}/{{SWAP_USED}}，{{MEM_STATUS}}</div>
     </div>
     <div>
       <span class="dot {{DISK_DOT}}"></span><span class="lb">磁盘</span><br>
-      {{DISK_TOTAL}} / {{DISK_USED}}
+      {{DISK_TOTAL}} / {{DISK_USED}}（{{DISK_PERCENT}}%）
       <div class="xt">可用{{DISK_AVAIL}} · {{DISK_NOTE}}</div>
     </div>
     <div>
       <span class="dot grn"></span><span class="lb">运行</span><br>
       {{UPTIME_SHORT}}
-      <div class="xt">{{UPTIME_DAYS}}天连续运行</div>
+      <div class="xt">{{UPTIME_DAYS}}天连续运行 · 稳定</div>
     </div>
   </div>
   <hr>
