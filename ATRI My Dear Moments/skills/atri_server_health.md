@@ -1,3 +1,8 @@
+---
+name: atri_server_health
+description: 通过SSH查询服务器运行状态，生成格式化健康报告。涵盖系统负载、内存、磁盘、Docker容器等关键指标的状态判定。
+---
+
 # 📡 ATRI Server Health Report Skill
 
 **描述**：通过SSH查询服务器运行状态，生成格式化健康报告。涵盖系统负载、内存、磁盘、Docker容器等关键指标的状态判定。

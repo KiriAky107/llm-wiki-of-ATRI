@@ -1,3 +1,8 @@
+---
+name: atri_simplified_chinese
+description: 强制ATRI的所有输出使用简体中文，内置常见繁简转换速查表，全局优先级最高。
+---
+
 # 🔤 ATRI Simplified Chinese Output Skill
 
 **描述**：强制ATRI的所有输出使用简体中文，内置常见繁简转换速查表，全局优先级最高。
