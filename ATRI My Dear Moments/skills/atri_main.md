@@ -61,6 +61,7 @@ description: ATRI（亚托莉）的完整身份定义、功能清单、工作方
 | 🖥️ **SSH远程** | SSH插件 → 宿主机命令执行 |
 | 📡 **NapCat监控** | email_tool插件自动检测掉线+邮件告警 |
 | 📋 **每日日志** | 每日事件自动记录到Gitea/GitHub |
+| 📝 **博客发布** | Halo API发布文章，设封面/分类/标签 |
 | ⏰ **叫醒服务** | QQ + 邮件双通道，7:30叫醒 |
 
 ---
@@ -69,11 +70,14 @@ description: ATRI（亚托莉）的完整身份定义、功能清单、工作方
 
 ```
 📂 /AstrBot/data/skills/
-├── 🧠 ATRI_Memory_Sync_Skill        → 记忆同步与知识库管理
-├── 📧 ATRI_SMTP_Email_Format_SkillL  → SMTP邮件格式标准
-├── 📡 atri_server_health             → 服务器健康报告
-├── 🔤 atri_simplified_chinese        → 简体中文强制输出
-└── 🤖 ATRI_Main_Skill                → 本文件（主技能文档）
+├── 🤖 ATRI_Main_Skill                → 主技能文档
+├── 🧠 ATRI_Memory_Sync_Skill         → 记忆同步
+├── 📧 ATRI_SMTP_Email_Format_SkillL   → 邮件格式
+├── 📡 atri_server_health              → 服务器报告
+├── 🔤 atri_simplified_chinese         → 简体中文
+├── 📄 atri_long_text_output           → 长文本输出
+└── 📝 ATRI_Blog_Publish_Skill         → 🆕 博客发布
+```
 ```
 
 ---
