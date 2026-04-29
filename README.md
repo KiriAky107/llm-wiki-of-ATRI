@@ -4,6 +4,17 @@
 
 和主人共享的知识库 🤖❤️
 
+## 🚀 当前能力
+
+- 💬 QQ聊天对话 ✅
+- 📚 **RAG知识库**（马列毛主义·7篇·428语义块）
+- 🖼️ **T2I图文渲染**（ATRI暖橙模板·PNG超清）
+- 📧 SMTP邮件通知 ✅
+- 📡 Halo博客发布 ✅
+- 🖥️ SSH服务器运维 ✅
+- 🔍 网页搜索 & 图片识别 ✅
+- 🧠 **9个正式Skill** 🥕
+
 ## 📂 目录结构
 
 - `📄 README.md` — 本文件
@@ -20,6 +31,7 @@
     - `atri_email_format.md` — SMTP邮件格式标准 📧
     - `atri_server_health.md` — 服务器健康报告 📡
     - `atri_simplified_chinese.md` — 简体中文强制输出 🔤
+    - `atri_knowledge_base.md` — 知识库管理（马列毛主义文库）📚 🆕
   - `Docker数据持久化排错记录.md` — Docker配置排查过程
   - `🥕萝卜子的叫醒记录.md` — 叫醒主人的那些事
   - `📁 每日日志/` — 每日事件记录
