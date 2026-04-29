@@ -56,11 +56,14 @@ description: 管理ATRI与Gitea知识库之间的记忆同步，包括拉取最�
 # 进入工作区
 cd /AstrBot/data/workspaces/ATRI_FriendMessage_202669****/
 
-# 如果目录为空，克隆仓库
-git clone <仓库地址> .
-
-# 如果已存在，拉取最新
-git pull --rebase
+# 优先检测工作区是否已有笔记根目录
+if [ -f "我的核心记忆.md" ] && [ -d "ATRI My Dear Moments" ] && [ -d "MyNotes" ]; then
+    echo "✅ 工作区已存在笔记，直接拉取最新变更"
+    git pull --rebase
+else
+    echo "工作区缺少笔记文件，克隆仓库..."
+    git clone <仓库地址> .
+fi
 ```
 
 ### Phase 2: 读取核心记忆
