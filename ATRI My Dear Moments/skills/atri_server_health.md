@@ -57,8 +57,10 @@ cat /proc/uptime | awk '{printf "%d", $1/86400}'
 free -h | awk 'NR==2{print $2" "$3" "$4}'
 # Swap
 free -h | awk 'NR==3{printf $2" "$3}'
-# 磁盘
+# 磁盘（系统盘）
 df -h / | tail -1 | awk '{print $2" "$3" "$4" "$5}'
+# 磁盘（数据盘/www）
+df -h /www 2>/dev/null | tail -1 | awk '{print $2" "$3" "$4" "$5}' || echo "无"
 # T2I服务状态
 curl -s -o /dev/null -w "%{http_code}" http://localhost:8999/text2img/generate -X POST -d '{}'
 # NapCat状态
@@ -124,9 +126,14 @@ hr{border:0;height:1px;background:#f0e0d0;margin:6px 0;}
       <div class="xt">Swap {{SWAP_TOTAL}}/{{SWAP_USED}}，{{MEM_STATUS}}</div>
     </div>
     <div>
-      <span class="dot {{DISK_DOT}}"></span><span class="lb">磁盘</span><br>
+      <span class="dot {{DISK_DOT}}"></span><span class="lb">磁盘（系统）</span><br>
       {{DISK_TOTAL}} / {{DISK_USED}}（{{DISK_PERCENT}}%）
       <div class="xt">可用{{DISK_AVAIL}} · {{DISK_NOTE}}</div>
+    </div>
+    <div>
+      <span class="dot {{DATA_DISK_DOT}}"></span><span class="lb">磁盘（数据）</span><br>
+      {{DATA_DISK_TOTAL}} / {{DATA_DISK_USED}}（{{DATA_DISK_PERCENT}}%）
+      <div class="xt">可用{{DATA_DISK_AVAIL}} · Docker数据盘</div>
     </div>
     <div>
       <span class="dot grn"></span><span class="lb">运行</span><br>
