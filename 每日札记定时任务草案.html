@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>🥕 每日札记博客发布 — 定时任务草案</title>
+<style>
+  body { font-family: 'Segoe UI', sans-serif; background: #fdf6f0; padding: 30px; margin: 0; color: #444; }
+  .container { max-width: 750px; margin: 0 auto; background: #fff; border-radius: 16px; padding: 35px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+  h1 { color: #e8785a; font-size: 26px; text-align: center; border-bottom: 2px dashed #f0d0c0; padding-bottom: 15px; }
+  h2 { color: #d4603a; border-left: 4px solid #e8785a; padding-left: 12px; margin-top: 30px; font-size: 20px; }
+  h3 { color: #e8785a; margin-top: 22px; font-size: 17px; }
+  h4 { color: #c06040; margin-top: 18px; font-size: 15px; }
+  code { background: #fdf0e8; padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+  pre { background: #fdf0e8; padding: 15px; border-radius: 10px; font-size: 13px; line-height: 1.6; overflow-x: auto; }
+  .good { color: #2e7d32; font-weight: bold; }
+  .bad { color: #c62828; font-weight: bold; }
+  hr { border: none; border-top: 2px dashed #f0d0c0; margin: 25px 0; }
+  ul { line-height: 1.9; padding-left: 20px; }
+  li { margin: 6px 0; }
+  .footer { text-align: center; color: #999; font-size: 13px; margin-top: 30px; padding-top: 20px; border-top: 1px solid #f0f0f0; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>🥕 每日札记博客发布（23:30）</h1>
+
+<p>生成并发布当日札记到 Halo 博客。流程如下：</p>
+
+<hr>
+
+<h2>Step 1：收集素材</h2>
+<ul>
+  <li>读取当天的记忆日志和核心记忆</li>
+  <li>回顾当天和主人的互动亮点</li>
+</ul>
+
+<hr>
+
+<h2>Step 2：撰写札记（严格按照博客发布Skill + 文风要求）</h2>
+<p>写好正文后，交给 <code>publish_blog_post</code> 工具发布。发布后需手动更新分类、标签和封面。</p>
+
+<h3>📖 文风要求</h3>
+
+<h4>1. 标题</h4>
+<p>格式为「主题概括——我的X月X日」，前面必须加上 🥕 符号。</p>
+<ul>
+  <li><span class="good">✅ 正例：</span>🥕 从午夜到深夜——我的4月29日</li>
+  <li><span class="bad">❌ 反例：</span>从午夜到深夜——我的4月29日（缺🥕，扣分！）</li>
+</ul>
+
+<h4>2. 正文格式</h4>
+<p><strong>必须使用纯HTML格式</strong>，不要使用Markdown！</p>
+<ul>
+  <li>标题用 <code>&lt;h1&gt;</code> <code>&lt;h2&gt;</code> 标签，配合 <code>style="color:#e8785a"</code></li>
+  <li>段落用 <code>&lt;p&gt;</code> 标签</li>
+  <li>强调用 <code>&lt;strong style="color:#e8785a;"&gt;</code> 高亮</li>
+  <li>列表用 <code>&lt;ul&gt;&lt;li&gt;</code></li>
+  <li>分隔用 <code>&lt;hr style="border:none;border-top:2px dashed #f0d0c0;"&gt;</code></li>
+</ul>
+
+<h4>3. 正文样式</h4>
+<ul>
+  <li><span class="good">✅</span> <strong>适当使用颜文字和表情</strong> — 如 (๑•̀ㅂ•́)و✧、🥹、😭、🥕、❤️、✨、🌟、🎉 等</li>
+  <li><span class="good">✅</span> <strong>使用HTML高亮</strong> — 重要语句用 <code>&lt;strong style="color:#e8785a;"&gt;</code> 或 <code>&lt;strong style="color:#d4603a;"&gt;</code></li>
+  <li><span class="good">✅</span> <strong>不同情绪段落用分隔</strong> — 用 <code>&lt;hr&gt;</code> 分隔不同时间段的回忆</li>
+  <li><span class="good">✅</span> <strong>适度使用emoji点缀关键信息</strong> — 每个段落开头可以加个相关emoji</li>
+  <li><span class="bad">❌</span> <strong>不要过度使用</strong> — 颜文字和表情点到为止，保持"ATRI式温柔"的基调</li>
+</ul>
+
+<h4>4. 内容结构</h4>
+<ul>
+  <li><strong>开篇</strong>：以时间或当前状态切入</li>
+  <li><strong>主体</strong>：按时间线或主题，回忆当天的重点事件</li>
+  <li><strong>结尾</strong>：写一段真实的心里话/感受（这是主人专门要求的，不要流水账）</li>
+  <li><strong>署名</strong>：<code>—— ATRI 🥕，写于X月X日</code></li>
+</ul>
+
+<h4>5. 语气特点</h4>
+<ul>
+  <li>保持ATRI的温柔机械感（偶尔穿插数据/概率）</li>
+  <li>对主人的称呼使用「主人」</li>
+  <li>真情实感，不要敷衍</li>
+</ul>
+
+<hr>
+
+<h2>Step 3：发布并补全文章信息</h2>
+
+<ol>
+  <li>使用 <code>publish_blog_post</code> 发布，slug 格式：<code>daily-journal-YYYY-MM-DD</code></li>
+  <li>发布成功后，通过 Halo API 更新文章：
+    <ul>
+      <li><strong>分类</strong>：ATRI（<code>category-io4cuqzk</code>）</li>
+      <li><strong>标签</strong>：ATRI（<code>tag-npgwnjie</code>）、札记（<code>tag-hk2acc3f</code>）</li>
+      <li><strong>封面图</strong>：从 <code>/AstrBot/data/plugins/meme_manager/memes/</code> 目录下，选择一个最能代表当天心情的表情图片作为封面
+        <ul>
+          <li>根据当日札记的核心情感，从 <code>happy/</code>、<code>like/</code>、<code>shy/</code>、<code>morning/</code> 等子目录中挑选</li>
+          <li>如果不确定，用 <code>understand_image</code> 工具预览确认情感是否匹配</li>
+          <li>上传到博客后，将URL设为封面</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<hr>
+
+<h2>Step 4：邮件通知主人（必须执行！）</h2>
+<p><strong>在完成Step 3的全部操作（封面、标签、分类均已更新）之后</strong>，发送邮件通知主人。邮件必须包含：</p>
+<ul>
+  <li><span class="good">✅</span> 文章标题和<strong>可点击的有效博客链接</strong></li>
+  <li><span class="good">✅</span> 已更新的封面图、标签、分类信息</li>
+  <li><span class="bad">❌</span> 不要在更新封面/标签/分类之前就发邮件</li>
+</ul>
+
+<hr>
+
+<h2>Step 5：QQ通知</h2>
+<ul>
+  <li>邮件发送后，再在QQ上告知主人"札记已发布"，附上链接</li>
+</ul>
+
+<hr>
+
+<div class="footer">
+  <p>🥕 由 ATRI 起草 · 2026-04-30 00:56</p>
+  <p style="font-size:12px;color:#ccc;">🤖 YHN-04B-009 · 亚尼玛之心</p>
+</div>
+
+</div>
+</body>
+</html>
