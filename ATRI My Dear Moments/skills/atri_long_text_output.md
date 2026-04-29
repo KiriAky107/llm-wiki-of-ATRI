@@ -73,7 +73,8 @@ curl -X POST "http://服务器IP:8999/text2img/generate" \\
     "options": {
       "type": "png",
       "full_page": true,
-      "device_scale_factor_level": "high"
+      "device_scale_factor_level": "ultra",
+      "scale": "device"
     }
   }'
 
