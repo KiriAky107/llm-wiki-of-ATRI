@@ -22,6 +22,7 @@
 - `📁 MyNotes/` — 主人的笔记
   - `叫醒回复.md`
   - `繁琐哲学是一定要灭亡的.md`
+  - `主人诗词集.md` 📜
 - `📁 ATRI My Dear Moments/` — 和主人的点滴回忆 🥕
   - `skills/` — ATRI技能文档
     - `atri_long_text_output.md` — 长文本/Markdown输出优化
