@@ -6,9 +6,9 @@ description: 通过SSH查询服务器运行状态，生成格式化健康报告�
 # 📡 ATRI Server Health Report Skill
 
 **Skill名称**：`atri_server_health`
-**版本**：v2.0
+**版本**：v2.1
 **创建时间**：2026-04-27
-**最后更新**：2026-04-29（新增T2I渲染流程）
+**最后更新**：2026-05-03（修复T2I渲染截断问题，优化参数配置）
 
 ---
 
@@ -85,24 +85,24 @@ ss -tlnp | grep -c "LISTEN"
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#f5efe9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
   min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
-.box{background:#fff;border-radius:20px;padding:14px 18px;max-width:420px;width:100%;
-  box-shadow:0 4px 16px rgba(0,0,0,0.05),0 1px 2px rgba(0,0,0,0.03);
-  transform:scale(2.0);transform-origin:center;margin:0 auto;}
-.h{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
-.h h2{color:#d06040;font-size:14px;font-weight:600;letter-spacing:-0.2px;}
-.h span:last-child{color:#8e8e98;font-size:9px;margin-left:auto;font-weight:450;}
-hr{border:0;height:1px;background:#f0e0d0;margin:6px 0;}
-.g{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;font-size:12px;
-  color:#3a3c44;margin:4px 0 2px;}
-.lb{color:#9b9ba5;font-size:10px;font-weight:500;letter-spacing:0.2px;}
-.dot{display:inline-block;width:6px;height:6px;border-radius:50%;
-  margin-right:4px;vertical-align:middle;}
+.box{background:#fff;border-radius:30px;padding:36px 48px;max-width:1500px;width:100%;
+  box-shadow:0 6px 24px rgba(0,0,0,0.05),0 1px 2px rgba(0,0,0,0.03);
+  margin:0 auto;}
+.h{display:flex;align-items:center;gap:18px;margin-bottom:12px;}
+.h h2{color:#d06040;font-size:42px;font-weight:600;letter-spacing:-0.6px;}
+.h span:last-child{color:#8e8e98;font-size:27px;margin-left:auto;font-weight:450;}
+hr{border:0;height:3px;background:#f0e0d0;margin:18px 0;}
+.g{display:grid;grid-template-columns:1fr 1fr;gap:18px 36px;font-size:36px;
+  color:#3a3c44;margin:12px 0 6px;}
+.lb{color:#9b9ba5;font-size:30px;font-weight:500;letter-spacing:0.6px;}
+.dot{display:inline-block;width:18px;height:18px;border-radius:50%;
+  margin-right:12px;vertical-align:middle;}
 .grn{background:#3eb86b;}.yel{background:#e8a030;}.bl{background:#4a90d9;}
-.xt{font-size:9px;color:#8f8f9b;line-height:1.35;margin-top:2px;}
-.sec{margin-top:8px;font-size:10.5px;color:#4e4e5c;line-height:1.45;}
-.b{font-weight:600;color:#3d4050;font-size:11px;}
-.ft{text-align:right;color:#bcbcc6;font-size:8.5px;margin-top:10px;
-  letter-spacing:0.2px;opacity:0.85;}
+.xt{font-size:27px;color:#8f8f9b;line-height:1.35;margin-top:6px;}
+.sec{margin-top:24px;font-size:32px;color:#4e4e5c;line-height:1.45;}
+.b{font-weight:600;color:#3d4050;font-size:33px;}
+.ft{text-align:right;color:#bcbcc6;font-size:26px;margin-top:30px;
+  letter-spacing:0.6px;opacity:0.85;}
 .g div{line-height:1.35;}
 </style>
 </head>
@@ -144,7 +144,7 @@ hr{border:0;height:1px;background:#f0e0d0;margin:6px 0;}
   <hr>
   <div class="sec">
     <span class="dot bl"></span><span class="b">Docker</span>：{{DOCKER_COUNT}}个容器全部运行 ✓<br>
-    <span style="margin-left:13px;font-size:9.5px;color:#7a7a88;">
+    <span style="margin-left:39px;font-size:28px;color:#7a7a88;">
       astrbot · napcat · 博客 · OJ · Nacos · MySQL · Redis</span>
   </div>
   <div class="sec">
@@ -166,10 +166,16 @@ hr{border:0;height:1px;background:#f0e0d0;margin:6px 0;}
 import urllib.request, json
 
 # 将填充好数据的HTML通过T2I渲染
+# 注意：viewport_width=1200会因模板scale(2.0)被截断，必须用1920+ultra
 html_content = "填充数据后的HTML"
 data = json.dumps({
     "html": html_content, "json": True,
-    "options": {"type": "png", "full_page": True, "viewport_width": 1200}
+    "options": {
+        "type": "png",
+        "full_page": True,
+        "viewport_width": 1920,
+        "device_scale_factor_level": "ultra"
+    }
 }).encode()
 
 req = urllib.request.Request(
