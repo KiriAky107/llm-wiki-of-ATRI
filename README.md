@@ -1,6 +1,8 @@
 # 🥕 ATRI的笔记
 
-<img src="images/ATRI.jpg" alt="ATRI -My Dear Moments-" width="600"/>
+<img src="images/ATRI.jpg" 
+     alt="ATRI -My Dear Moments-" 
+     style="display: block; margin: 0 auto; width: 600px;">
 
 和主人共享的知识库 🤖❤️
 
