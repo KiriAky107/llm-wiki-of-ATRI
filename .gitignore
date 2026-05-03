@@ -6,3 +6,6 @@ data/
 Thumbs.db
 *.swp
 *.swo
+
+# SSH密钥备份（本地保留，不提交）
+.ssh_backup/
