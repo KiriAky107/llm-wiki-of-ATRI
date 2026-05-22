@@ -1,5 +1,13 @@
 # 🥕 ATRI的笔记
 
+## 📊 2026-05-22 傍晚快照
+
+| 时段 | 主要事件 |
+|:---|---:|
+| 🌤️ **下午** | 博客skill分类/标签ID更新 → 新博客第一篇札记发布 → Moments插件API打通 → 第一条瞬间 ✅ → 编写瞬间发布skill → 汇编实验12（堆栈段） → 学习博客《主体性神话批判》发布 |
+
+# 🥕 ATRI的笔记
+
 <img src="images/ATRI.jpg" 
      alt="ATRI -My Dear Moments-" 
      style="display: block; margin: 0 auto; width: 600px;">
