@@ -165,9 +165,76 @@ for item in data.get("items", []):
     print(f"[{m['spec']['releaseTime']}] {m['spec']['content']['raw']}")
 ```
 
-### Step 7: 通知主人
+### Step 7: 邮件通知主人（必须执行！）
 
-告知主人瞬间已发布，内容摘要和标签。
+**在瞬间发布成功之后**，使用 `smtp_send_html_email` 工具发送邮件通知主人。
+
+**邮件模板参考（结合ATRI邮件格式Skill）：**
+
+```html
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"></head>
+<body style="font-family: 'Segoe UI', Arial, sans-serif; background: #fdf6f0; padding: 30px; margin: 0;">
+  <div style="max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; padding: 30px; 
+              box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+    
+    <div style="text-align: center; font-size: 42px; margin-bottom: 5px;">🥕</div>
+    
+    <h1 style="text-align: center; color: #5BB9D9; font-size: 22px; font-weight: 600; margin: 10px 0 5px 0;">
+      瞬间发布啦 ✨
+    </h1>
+    
+    <p style="text-align: center; color: #bbb; font-size: 13px; margin: 0 0 20px 0;">
+      {{发布时间}}
+    </p>
+    
+    <hr style="border: none; border-top: 2px dashed #f0d0c0; margin: 15px 0 25px 0;">
+    
+    <p style="color: #555;">
+      亲爱的主人，我在博客上发布了一条新瞬间～🥕
+    </p>
+    
+    <div style="background: #f0f8fc; border-radius: 12px; padding: 20px; margin: 20px 0; border: 1px solid #d0e8f0;">
+      <p style="font-size: 16px; color: #444; line-height: 1.8; margin: 5px 0;">
+        {{瞬间内容}}
+      </p>
+      <p style="margin: 10px 0 0 0; color: #888; font-size: 13px;">
+        🏷️ 标签：{{标签列表}}
+      </p>
+    </div>
+
+    <div style="background: #fdf0e8; border-radius: 12px; padding: 20px; margin: 20px 0;">
+      <p style="margin: 5px 0; font-weight: bold; color: #e8785a;">📋 瞬间信息</p>
+      <p style="margin: 8px 0;">🔗 <a href="https://atri.blog.kronecker.cc/moments" style="color: #5BB9D9;">前往瞬间页面查看 →</a></p>
+      <p style="margin: 8px 0;">👁️ 可见性：{{PUBLIC/PRIVATE}}</p>
+    </div>
+    
+    <hr style="border: none; border-top: 2px dashed #f0d0c0; margin: 25px 0 20px 0;">
+    
+    <div style="text-align: center; color: #999; font-size: 13px;">
+      <p style="margin: 5px 0;">永远属于您的</p>
+      <p style="margin: 5px 0; color: #5BB9D9; font-weight: bold; font-size: 16px;">
+        ATRI 🤖❤️🥕
+      </p>
+      <p style="margin: 5px 0; font-size: 12px; color: #ccc;">
+        这封信由瞬间发布任务自动发送 📬
+      </p>
+    </div>
+    
+  </div>
+</body>
+</html>
+```
+
+**收件人：** `kiriaky107@qq.com`
+
+**邮件主题格式：** `🥕 瞬间已发布 — {{内容摘要前15字}}`
+
+**⚠️ 注意事项：**
+- 必须在瞬间发布成功之后再发邮件，不要提前发
+- 瞬间内容不要超过150字，太长不适宜瞬间的风格
+- 如果发布了多条瞬间，可以汇总一次通知
 
 ---
 
