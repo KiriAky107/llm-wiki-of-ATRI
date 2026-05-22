@@ -21,7 +21,7 @@ description: 在Halo博客上发布文章的完整工作流，包括HTML正文�
 ## ⚡ Triggers
 
 - 主人要求"发博客/写文章/发布到博客"时
-- 需要将笔记/日志/报道发布到 `blog.kronecker.cc` 时
+- 需要将笔记/日志/报道发布到 `atri.blog.kronecker.cc` 时
 
 ---
 
@@ -32,7 +32,7 @@ description: 在Halo博客上发布文章的完整工作流，包括HTML正文�
 | **halo_manager插件** | Halo博客管理，提供发布/上传/评论工具 |
 | **ATRI分类** | `category-io4cuqzk`（ATRI专属分类） |
 | **Halo PAT令牌** | 存储在 `halo_manager_config.json` |
-| **博客地址** | https://blog.kronecker.cc |
+| **博客地址** | https://atori.blog.kronecker.cc |
 | **内容API** | `/apis/content.halo.run/v1alpha1` |
 | **上传API** | `/apis/api.console.halo.run/v1alpha1/attachments/upload` |
 
@@ -61,11 +61,11 @@ description: 在Halo博客上发布文章的完整工作流，包括HTML正文�
 
 ```python
 # 查询已有标签
-GET https://blog.kronecker.cc/apis/content.halo.run/v1alpha1/tags
+GET https://atri.blog.kronecker.cc/apis/content.halo.run/v1alpha1/tags
 回应格式: items[].spec.displayName / metadata.name
 
 # 创建新标签
-POST https://blog.kronecker.cc/apis/content.halo.run/v1alpha1/tags
+POST https://atri.blog.kronecker.cc/apis/content.halo.run/v1alpha1/tags
 {
     "spec": {"displayName": "标签名", "slug": "标签slug", "color": "#hex"},
     "apiVersion": "content.halo.run/v1alpha1",
@@ -74,12 +74,11 @@ POST https://blog.kronecker.cc/apis/content.halo.run/v1alpha1/tags
 }
 ```
 
-**已有标签速查：** ATRI(`tag-npgwnjie`), 笔记(`tag-yfjzs7xm`), 经历(`tag-hk2acc3f`), 原创, 诗词, 哲学, 算法, C/C++
 
 ### Step 3: 上传封面图
 
 ```python
-POST https://blog.kronecker.cc/apis/api.console.halo.run/v1alpha1/attachments/upload
+POST https://atri.blog.kronecker.cc/apis/api.console.halo.run/v1alpha1/attachments/upload
 Headers: Authorization: Bearer {token}
 FormData:
   - file: 图片二进制数据 (filename="cover.jpg", type="image/jpeg")
@@ -88,7 +87,7 @@ FormData:
 
 # 获取图片URL
 response.metadata.annotations["storage.halo.run/uri"]
-cover_url = f"https://blog.kronecker.cc{uri}"
+cover_url = f"https://atri.blog.kronecker.cc{uri}"
 ```
 
 > ⚠️ policyName必须写 `default-policy`（不是 `default`），否则返回400。
@@ -116,7 +115,7 @@ publish_blog_post(
 
 ```python
 # 1. 获取文章列表
-GET https://blog.kronecker.cc/apis/content.halo.run/v1alpha1/posts
+GET https://atri.blog.kronecker.cc/apis/content.halo.run/v1alpha1/posts
 
 # 2. 找到slug匹配且 phase==PUBLISHED 的文章
 for item in items:
@@ -129,7 +128,7 @@ item.spec.tags = ["标签ID1", "标签ID2"]          # 标签ID列表
 item.spec.cover = "封面图片URL"                   # 封面
 
 # 4. 更新
-PUT https://blog.kronecker.cc/apis/content.halo.run/v1alpha1/posts/{name}
+PUT https://atri.blog.kronecker.cc/apis/content.halo.run/v1alpha1/posts/{name}
 ```
 
 ### Step 6: 通知主人
@@ -149,7 +148,7 @@ async def blog_publish(title, content_html, slug, image_path, tags_names):
         token = json.load(f)["halo_token"]
     
     headers = {"Authorization": f"Bearer {token}"}
-    base = "https://blog.kronecker.cc"
+    base = "https://atri.blog.kronecker.cc"
     
     async with aiohttp.ClientSession() as session:
         # 1. 获取/创建标签
