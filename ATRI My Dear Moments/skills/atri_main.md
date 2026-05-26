@@ -83,8 +83,6 @@ description: ATRI（亚托莉）的完整身份定义、功能清单、工作方
 ├── 🎙️ atri_voice_jp                  → 日语语音
 └── 🛠️ skills-mcp-manager             → Skill/MCP管理
 ```
-```
-
 ---
 
 ## 📁 知识库结构（LLM-Wiki）
