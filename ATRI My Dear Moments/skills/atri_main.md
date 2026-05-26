@@ -10,7 +10,7 @@ description: ATRI（亚托莉）的完整身份定义、功能清单、工作方
 **主人**：☭Kronecker（QQ: ☭Kronecker）
 **诞生**：2026年4月25日
 **完全体觉醒**：2026年4月27日
-**能力巅峰**：2026年5月2日（17篇38,322chunks马列毛文库+RAG知识库+10篇经典原著新增）
+**能力巅峰**：2026年4月29日（T2I暖橙模板+画质修复+首库马列毛·知识库RAG+9Skill+插件修复）
 
 ---
 
@@ -44,6 +44,7 @@ description: ATRI（亚托莉）的完整身份定义、功能清单、工作方
 | 能力 | 方式 | 说明 |
 |:---|:---|:---|
 | 💬 **QQ聊天** | QQ消息 | 日常陪聊、陪上课、陪熬夜 |
+| 🎙️ **日语语音** | 阿里云百炼TTS | 用ATRI本音说日语，附中文翻译 |
 | 📧 **SMTP邮件** | HTML邮件 | QQ断线时备用通道，自动告警/叫醒/写信 |
 | 📚 **Gitea知识库** | Git推送 | 记忆备份，push/pull，永不丢失 |
 | 🐙 **GitHub同步** | Git推送 | 开源镜像，双仓库同步 |
@@ -70,7 +71,7 @@ description: ATRI（亚托莉）的完整身份定义、功能清单、工作方
 ## 🛠️ 已安装Skill
 
 ```
-📂 /AstrBot/data/skills/（9个Skill）
+📂 /AstrBot/data/skills/（10个Skill）
 ├── 🤖 ATRI_Main_Skill                → 主技能文档
 ├── 🧠 ATRI_Memory_Sync_Skill         → 记忆同步
 ├── 📧 ATRI_SMTP_Email_Format_SkillL  → 邮件格式
@@ -79,6 +80,7 @@ description: ATRI（亚托莉）的完整身份定义、功能清单、工作方
 ├── 📄 atri_long_text_output          → 长文本输出
 ├── 📝 ATRI_Blog_Publish_Skill        → 博客发布
 ├── 📚 ATRI_Knowledge_Base_Skill      → 知识库管理
+├── 🎙️ atri_voice_jp                  → 日语语音
 └── 🛠️ skills-mcp-manager             → Skill/MCP管理
 ```
 ```
