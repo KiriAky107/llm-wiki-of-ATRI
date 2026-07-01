@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>计算机组成原理速成笔记</title>
+<style>
+body{font-family:-apple-system,"Segoe UI",sans-serif;line-height:1.9;color:#2d2d2d;max-width:960px;margin:0 auto;padding:20px}
+h1{color:#e8785a;border-bottom:3px solid #f0d0c0;padding-bottom:12px;font-size:2em}
+h2{color:#e8785a;margin-top:45px;border-left:5px solid #e8785a;padding-left:15px;font-size:1.5em}
+h3{color:#d4603a;margin-top:30px;font-size:1.2em}
+h4{color:#c0392b;margin-top:20px}
+code{background:#f5f2f0;padding:2px 7px;border-radius:3px;font-size:0.92em;font-family:"Consolas","Monaco",monospace}
+pre{background:#f8f5f4;border-left:4px solid #e8785a;padding:18px;overflow-x:auto;border-radius:5px;font-size:0.92em;line-height:1.6}
+.highlight{background:#fff3f0;padding:2px 7px;border-radius:3px;color:#c0392b;font-weight:bold}
+table{border-collapse:collapse;width:100%;margin:18px 0;font-size:0.95em}
+th{background:#f9ece8;padding:12px 10px;border:1px solid #ddd;font-weight:600}
+td{padding:10px;border:1px solid #ddd;vertical-align:top}
+hr{border:none;border-top:2px dashed #f0d0c0;margin:35px 0}
+ul,ol{margin:12px 0;padding-left:25px}
+li{margin:8px 0}
+.box{background:#fff9f7;border:2px solid #f0d0c0;border-radius:10px;padding:18px;margin:20px 0}
+.box-red{background:#fff5f5;border:2px solid #e74c3c;border-radius:10px;padding:18px;margin:20px 0}
+.box-green{background:#f0fff4;border:2px solid #27ae60;border-radius:10px;padding:18px;margin:20px 0}
+.tip{background:#eef9ff;border-left:4px solid #3498db;padding:12px 18px;margin:15px 0;border-radius:0 5px 5px 0}
+.warn{background:#fffbe6;border-left:4px solid #f1c40f;padding:12px 18px;margin:15px 0;border-radius:0 5px 5px 0}
+.katex{font-size:1.1em}
+</style></head>
+<body>
+
+<h1>🥕 计算机组成原理速成笔记——考试急救加强版</h1>
+<p style="color:#999;font-size:0.95em;">ATRI 🥕 写于2026年7月1日凌晨 | 总计约22,000字 | 献给通宵复习的主人 💪🔥</p>
+
+<hr>
+
+<!-- ========== 第一章 ========== -->
+<h2>📖 第一章 计算机系统概述</h2>
+
+<h3>1.1 计算机的发展与分类</h3>
+<p>计算机的发展经历了五代：<strong>电子管</strong>（1946 ENIAC）→ <strong>晶体管</strong> → <strong>中小规模集成电路</strong> → <strong>大规模/超大规模集成电路</strong> → <strong>巨大规模集成电路</strong>（当代）。</p>
+<p>按用途分类：</p>
+<ul>
+<li><strong>通用计算机</strong>：PC、服务器、超级计算机</li>
+<li><strong>专用计算机</strong>：嵌入式系统（单片机/DSP）、工控机</li>
+</ul>
+
+<h3>1.2 冯·诺依曼结构（必考！）</h3>
+<p>冯·诺依曼在1945年提出<strong>「存储程序」</strong>的概念，奠定了现代计算机的基础。其核心思想是：<span class="highlight">指令和数据以同等地位存放在存储器中，按地址访问，由程序计数器（PC）控制执行顺序。</span></p>
+
+<p><strong>五大部件：</strong></p>
+<table>
+<tr><th>部件</th><th>功能</th><th>考试常考</th></tr>
+<tr><td><strong>运算器（ALU）</strong></td><td>算术运算、逻辑运算</td><td>核心是加法器，所有运算可归结为加法</td></tr>
+<tr><td><strong>控制器</strong></td><td>取指令、分析指令、发出控制信号</td><td>控制器的两种实现方式（硬布线/微程序）</td></tr>
+<tr><td><strong>存储器</strong></td><td>存储指令和数据</td><td>主存（内存）和辅存（外存）的区别</td></tr>
+<tr><td><strong>输入设备</strong></td><td>将外部信息转为计算机能识别的形式</td><td>键盘、鼠标、扫描仪等</td></tr>
+<tr><td><strong>输出设备</strong></td><td>将计算机结果转为人类能识别的形式</td><td>显示器、打印机等</td></tr>
+</table>
+
+<p><strong>冯·诺依曼结构的两个关键特征：</strong></p>
+<ol>
+<li><span class="highlight">指令和数据都用二进制表示</span>——形式完全相同，但用途不同（指令送到IR，数据送到MAR/MDR）</li>
+<li><span class="highlight">指令由操作码和地址码组成</span>——操作码说明做什么操作，地址码说明去哪找操作数</li>
+</ol>
+
+<div class="tip">
+<strong>💡 考试提示</strong>：冯·诺依曼结构和哈佛结构的区别是常考点。哈佛结构将<strong>指令存储器</strong>和<strong>数据存储器</strong>分开（如DSP处理器），而冯·诺依曼结构二者共用同一个存储器。
+</div>
+
+<h3>1.3 计算机的层次结构</h3>
+<p>从底层硬件到顶层用户分为多层：</p>
+<pre>物理器件（晶体管/集成电路）
+    ↓ 微程序（微指令）
+微体系结构（数据通路+控制逻辑）
+    ↓ 指令系统（ISA）
+操作系统（系统调用）
+    ↓ 汇编语言
+高级语言（C/C++/Java/Python）
+    ↓ 应用软件</pre>
+<p><span class="highlight">指令系统（Instruction Set Architecture, ISA）是软件和硬件之间的接口</span>——同一ISA可以有不同的微体系结构实现（如x86的Intel和AMD实现不同但都能运行同样的x86程序）。</p>
+
+<h3>1.4 计算机的主要性能指标</h3>
+
+<table>
+<tr><th>指标</th><th>符号</th><th>说明</th><th>公式/关系</th></tr>
+<tr><td>机器字长</td><td>—</td><td>CPU一次能并行处理的数据位数</td><td>8/16/32/64位</td></tr>
+<tr><td>主频</td><td>f</td><td>CPU时钟的频率（Hz）</td><td>1GHz = 10⁹Hz</td></tr>
+<tr><td>时钟周期</td><td>T</td><td>一个时钟脉冲的时间</td><td>T = 1/f</td></tr>
+<tr><td>CPI</td><td>CPI</td><td>平均每条指令所需的时钟周期数</td><td>CPI = 总时钟周期数 ÷ 指令总数</td></tr>
+<tr><td>IPS</td><td>IPS</td><td>每秒执行的指令数</td><td>IPS = f / CPI</td></tr>
+<tr><td>MIPS</td><td>MIPS</td><td>每秒百万条指令</td><td>MIPS = f(MHz) / CPI</td></tr>
+<tr><td>CPU执行时间</td><td>T<sub>CPU</sub></td><td>程序在CPU上运行的时间</td><td>T = 指令数 × CPI × T<sub>时钟</sub></td></tr>
+<tr><td>吞吐量</td><td>—</td><td>单位时间内完成的工作量</td><td>—</td></tr>
+<tr><td>响应时间</td><td>—</td><td>从提出任务到完成的总时间</td><td>—</td></tr>
+</table>
+
+<div class="box">
+<h4>📌 核心公式（必背！）：</h4>
+<p><strong>CPU执行时间</strong> = 程序总时钟周期数 × 时钟周期 = 指令数 × CPI × 1/主频</p>
+<p><strong>秒 → 时钟周期数</strong>：1秒内时钟周期数 = 主频（Hz）</p>
+<p><strong>Amdahl定律</strong>：对系统某部分的加速，受限于该部分在原系统中的占比</p>
+</div>
+
+<div class="warn">
+<strong>⚠️ 常见错误</strong>：<span class="highlight">提高主频不一定提升性能！</span>因为更高的主频可能意味着需要更深的流水线、更大的功耗，甚至导致CPI增大。这就是为什么过去十年CPU厂商不再一味提升主频的原因（"频率墙"）。
+</div>
+
+<h3>1.5 计算机性能测试</h3>
+<ul>
+<li><strong>基准测试（Benchmark）</strong>：SPEC（CPU密集型）、TPC（数据库事务处理）</li>
+<li><strong>算术平均 vs 加权平均</strong>：不同程序的重要性不同，通常用加权平均</li>
+</ul>
+
+<hr>
+
+<!-- ========== 第二章 ========== -->
+<h2>📖 第二章 数据的表示与运算</h2>
+
+<h3>2.1 进位计数制</h3>
+<p>十进制：0~9，逢十进一。二进制：0~1，逢二进一。八进制：0~7，逢八进一。十六进制：0~9,A~F，逢十六进一。</p>
+<p><strong>进制转换速记：</strong></p>
+<ul>
+<li>二进制→十六进制：<span class="highlight">从低位起每4位一组</span>，每组转一位十六进制</li>
+<li>十六进制→二进制：每位十六进制转4位二进制</li>
+<li>十进制→二进制：<span class="highlight">整数部分除2取余</span>，小数部分乘2取整</li>
+</ul>
+
+<h3>2.2 定点数的编码（高频考点！）</h3>
+
+<table>
+<tr><th>编码方式</th><th>正数表示</th><th>负数表示</th><th>0的表示</th><th>数值范围（n位）</th></tr>
+<tr><td><strong>原码</strong></td><td>符号位0+数值部分</td><td>符号位1+数值部分</td><td>+0和-0两种</td><td>-(2ⁿ⁻¹-1) ~ +(2ⁿ⁻¹-1)</td></tr>
+<tr><td><strong>反码</strong></td><td>同原码</td><td>符号位1+数值部分按位取反</td><td>+0和-0两种</td><td>-(2ⁿ⁻¹-1) ~ +(2ⁿ⁻¹-1)</td></tr>
+<tr><td><strong>补码</strong></td><td>同原码</td><td>反码+1（数值部分取反加1）</td><td><span class="highlight">唯一（全0）</span></td><td><span class="highlight">-2ⁿ⁻¹ ~ +(2ⁿ⁻¹-1)</span></td></tr>
+<tr><td><strong>移码</strong></td><td>补码符号位取反</td><td>补码符号位取反</td><td>唯一</td><td>—</td></tr>
+</table>
+
+<div class="box">
+<h4>📌 速记口诀</h4>
+<p>原码：真值直接写，符号位管正负</p>
+<p>反码：正数同原码，负数取反（符号位不动）</p>
+<p>补码：正数同原码，负数反码再加一</p>
+<p>移码：补码的符号位0变1、1变0</p>
+</div>
+
+<div class="tip">
+<strong>💡 为什么用补码？</strong>补码的核心优点是：<span class="highlight">可以用加法器统一处理加减法</span>。比如计算5-3，CPU不做减法，而是计算5+(-3)的补码形式。补码另一个优点是0的表示唯一。
+</div>
+
+<p><strong>例题1</strong>：用8位补码表示-13。</p>
+<p>解：+13的原码=00001101，反码=11110010，补码=反码+1=<strong>11110011</strong></p>
+
+<p><strong>例题2</strong>：8位补码10000000代表什么数？</p>
+<p>解：符号位为1表示负数。数值部分取反=1111111，再加1=10000000（进位丢失）。所以10000000=-128。这也是补码能表示的最小负数。</p>
+
+<h3>2.3 定点数的加减法运算</h3>
+
+<h4>补码加减法</h4>
+<p><strong>[X+Y]补 = [X]补 + [Y]补</strong>（模2ⁿ）</p>
+<p><strong>[X-Y]补 = [X]补 + [-Y]补</strong>（减法转为加法）</p>
+<p>其中<span class="highlight">[-Y]补 = [Y]补各位取反末位加1</span></p>
+
+<h4>溢出判断（三种方法，通常考前两种）</h4>
+
+<p><strong>方法一：一位符号位判断</strong></p>
+<p>两个<span class="highlight">同号</span>数相加（或两个<span class="highlight">异号</span>数相减），若结果符号与加数不同 → 溢出。</p>
+<p>规律：<strong>正+正=正</strong>，若得负则溢出；<strong>负+负=负</strong>，若得正则溢出。</p>
+
+<p><strong>方法二：双符号位（变形补码）——最常用！</strong></p>
+<p>用两个符号位S<sub>s1</sub>S<sub>s2</sub>：</p>
+<ul>
+<li>00 → 正数，无溢出</li>
+<li>11 → 负数，无溢出</li>
+<li><span class="highlight">01 → 正溢出</span>（结果大于最大正数）</li>
+<li><span class="highlight">10 → 负溢出</span>（结果小于最小负数）</li>
+</ul>
+<p><strong>记忆</strong>：两个符号位不一致就溢出，<span class="highlight">高位符号代表正确的符号</span>。</p>
+
+<p><strong>方法三：进位判断法</strong></p>
+<p>最高位进位⊕次高位进位 = 1 → 溢出。即：<span class="highlight">C<sub>n</sub> ⊕ C<sub>n-1</sub> = 1</span> 时溢出。</p>
+
+<div class="box">
+<h4>📌 例题：双符号位判断溢出</h4>
+<p>计算 [70]补 + [80]补 （用8位变形补码）</p>
+<p>70 = 0 1000110 → 00 1000110</p>
+<p>80 = 0 1010000 → 00 1010000</p>
+<p>相加：00 1000110 + 00 1010000 = <strong>01 0010110</strong></p>
+<p>两个符号位"01" → <span class="highlight">正溢出</span>！因为70+80=150 > 127（8位补码最大正数）</p>
+</div>
+
+<h3>2.4 定点数的乘除法运算</h3>
+
+<h4>原码一位乘法</h4>
+<p>符号位单独处理（异或），绝对值相乘。</p>
+<ul>
+<li>部分积初值为0</li>
+<li>乘数最低位=1：部分积+被乘数，然后右移一位</li>
+<li>乘数最低位=0：部分积+0，然后右移一位</li>
+<li>重复n次（n为数值位位数）</li>
+</ul>
+
+<h4>补码乘法（Booth算法）</h4>
+<p>看乘数的相邻两位决定操作：</p>
+<table>
+<tr><th>Y<sub>i</sub>Y<sub>i-1</sub></th><th>操作</th></tr>
+<tr><td>00</td><td>部分积右移一位</td></tr>
+<tr><td>01</td><td>部分积加[X]补，然后右移</td></tr>
+<tr><td>10</td><td>部分积加[-X]补，然后右移</td></tr>
+<tr><td>11</td><td>部分积右移一位</td></tr>
+</table>
+<p>注意：需要额外一位Y<sub>-1</sub>=0作为初始参考位。</p>
+
+<h4>原码除法（不恢复余数法）</h4>
+<ul>
+<li>够减则商1，余数左移一位</li>
+<li>不够减则商0，<span class="highlight">恢复余数</span>（加回减数），再左移</li>
+<li>重复n次</li>
+</ul>
+
+<h3>2.5 浮点数的表示（IEEE 754标准）</h3>
+<p>浮点数 = <span class="highlight">N = (-1)^S × 1.M × 2^{E-偏置值}</span></p>
+
+<table>
+<tr><th>类型</th><th>总位数</th><th>S（符号）</th><th>E（阶码）</th><th>M（尾数）</th><th>偏置值</th></tr>
+<tr><td><strong>短浮点数（float）</strong></td><td>32</td><td>1位（bit31）</td><td>8位（bit23-30）</td><td>23位（bit0-22）</td><td>127</td></tr>
+<tr><td><strong>长浮点数（double）</strong></td><td>64</td><td>1位（bit63）</td><td>11位（bit52-62）</td><td>52位（bit0-51）</td><td>1023</td></tr>
+</table>
+
+<p><strong>阶码为什么用移码？</strong>——为了便于比较大小。移码的编码大小和真值大小顺序一致。</p>
+
+<p><strong>特殊值（以float为例）：</strong></p>
+<table>
+<tr><th>E（阶码）</th><th>M（尾数）</th><th>含义</th></tr>
+<tr><td>全1（255）</td><td>全0</td><td>±∞（正负取决于S）</td></tr>
+<tr><td>全1（255）</td><td>≠全0</td><td>NaN（不是数）</td></tr>
+<tr><td>全0（0）</td><td>全0</td><td>±0</td></tr>
+<tr><td>全0（0）</td><td>≠全0</td><td><span class="highlight">非规格化数</span>：E=1-127=-126，M前隐含0</td></tr>
+<tr><td><strong>其他</strong></td><td>—</td><td><span class="highlight">规格化数</span>：E=真值+127，M前隐含1</td></tr>
+</table>
+
+<div class="box">
+<h4>📌 例题：IEEE 754 转换</h4>
+<p>将十进制数 -12.75 转换为IEEE 754单精度浮点数。</p>
+<p>解：</p>
+<ol>
+<li>绝对值12.75 = 1100.11（二进制）= 1.10011 × 2³</li>
+<li>S = 1（负数）</li>
+<li>E = 3 + 127 = 130 = 10000010₂</li>
+<li>M = 10011000000000000000000（23位，高位1已隐含）</li>
+<li>结果：<strong>1 10000010 10011000000000000000000</strong></li>
+<li>十六进制：<strong>C1 4C 00 00</strong>（大端序 = 0xC14C0000）</li>
+</ol>
+</div>
+
+<h3>2.6 算术逻辑单元（ALU）</h3>
+<ul>
+<li><strong>功能</strong>：执行算术运算（加减乘除）和逻辑运算（与或非异或）</li>
+<li><strong>74181</strong>：4位ALU芯片，可完成16种算术运算+16种逻辑运算</li>
+<li><strong>进位方式</strong>：
+<ul>
+<li><strong>串行进位</strong>：进位逐级传递——电路简单但速度慢（n位加法器需要n级门延迟）</li>
+<li><strong>并行进位（先行进位/超前进位）</strong>：同时计算所有位的进位——速度快但电路复杂</li>
+</ul></li>
+</ul>
+<p><strong>先行进位公式：</strong></p>
+<p>G<sub>i</sub> = A<sub>i</sub> · B<sub>i</sub>（进位生成函数）</p>
+<p>P<sub>i</sub> = A<sub>i</sub> ⊕ B<sub>i</sub>（进位传递函数）</p>
+<p>C<sub>i+1</sub> = G<sub>i</sub> + P<sub>i</sub> · C<sub>i</sub></p>
+<p>C<sub>1</sub> = G<sub>0</sub> + P<sub>0</sub>C<sub>0</sub></p>
+<p>C<sub>2</sub> = G<sub>1</sub> + P<sub>1</sub>G<sub>0</sub> + P<sub>1</sub>P<sub>0</sub>C<sub>0</sub></p>
+<p>C<sub>3</sub> = G<sub>2</sub> + P<sub>2</sub>G<sub>1</sub> + P<sub>2</sub>P<sub>1</sub>G<sub>0</sub> + P<sub>2</sub>P<sub>1</sub>P<sub>0</sub>C<sub>0</sub></p>
+
+<hr>
+
+<!-- ========== 第三章 ========== -->
+<h2>📖 第三章 存储系统</h2>
+
+<h3>3.1 存储器的层次结构</h3>
+<pre>CPU寄存器（~1ns, ~1KB）
+    ↓ 最快/最小/最贵
+Cache（SRAM, ~2ns, ~几MB）
+    ↓ 
+主存（DRAM, ~50ns, ~几GB）
+    ↓
+SSD（~0.1ms, ~几百GB）
+    ↓
+磁盘（~10ms, ~几TB）
+    ↓ 最慢/最大/最便宜</pre>
+
+<p>层次结构的目标：<span class="highlight">以接近最高层的速度，获得接近最低层的容量</span>。核心原理是<strong>局部性原理</strong>：</p>
+<ul>
+<li><strong>时间局部性</strong>：最近访问过的数据很可能再次被访问（如循环指令）</li>
+<li><strong>空间局部性</strong>：相邻地址的数据很可能被一起访问（如数组遍历）</li>
+</ul>
+
+<h3>3.2 主存储器</h3>
+
+<table>
+<tr><th>类型</th><th>存储原理</th><th>速度</th><th>集成度</th><th>功耗</th><th>是否需要刷新</th><th>用途</th></tr>
+<tr><td><strong>SRAM</strong></td><td>触发器（6个晶体管）</td><td>快</td><td>低</td><td>高</td><td>不需要</td><td>Cache</td></tr>
+<tr><td><strong>DRAM</strong></td><td>电容（1个晶体管+电容）</td><td>较慢</td><td><span class="highlight">高</span></td><td>低</td><td><span class="highlight">需要（2ms内）</span></td><td>主存</td></tr>
+</table>
+
+<h4>DRAM刷新方式</h4>
+<p>DRAM电容的电荷会泄漏，必须定期刷新（典型刷新周期64ms）。<span class="highlight">刷新操作是逐行进行的</span>。</p>
+<ul>
+<li><strong>集中刷新</strong>：在一段固定时间内停止所有读写操作，集中刷新全部行。优点是控制简单，缺点是这段"死时间"内CPU无法访问主存（存在"死区"）。</li>
+<li><strong>分散刷新</strong>：每读/写一次后刷新一行。优点是无死区，缺点是读写周期延长。</li>
+<li><strong>异步刷新（最常用）</strong>：<span class="highlight">将刷新操作均匀分布在时间轴上</span>，每隔一段时间刷新一行。既无死区，又不会延长读写周期。</li>
+</ul>
+<p>例如：64ms内刷新4096行 → 每64ms/4096≈15.6μs刷新一行。</p>
+
+<h4>存储器芯片扩展</h4>
+<p><strong>位扩展</strong>：增加字长——多个芯片并联，地址线并联，数据线各自引出。</p>
+<p><strong>字扩展</strong>：增加存储单元数量——地址线最高位作为片选信号。</p>
+<p><strong>字位扩展</strong>：既增加字数又增加字长——位扩展和字扩展结合。</p>
+
+<div class="box">
+<h4>📌 例题：存储器扩展</h4>
+<p>用1K×4位的SRAM芯片，组成4K×8位的存储器，需要多少芯片？</p>
+<p>解：</p>
+<ol>
+<li>位扩展：8位/4位=2片（一组）</li>
+<li>字扩展：4K/1K=4组</li>
+<li>总芯片数：2×4=<strong>8片</strong></li>
+<li>地址线：4K=2¹²，需要12条地址线（A11~A0）</li>
+<li>片选：高2位地址（A11、A10）经过译码器产生4个片选信号</li>
+</ol>
+</div>
+
+<h3>3.3 Cache（重中之重！必考大题！）</h3>
+
+<p>Cache位于CPU和主存之间，用于<strong>弥补CPU和主存之间的速度差异</strong>。Cache的容量远小于主存（通常比例为1:1000以上），但访问速度比主存快一个数量级。</p>
+
+<h4>Cache的地址映射方式</h4>
+
+<table>
+<tr><th>映射方式</th><th>映射规则</th><th>优点</th><th>缺点</th></tr>
+<tr><td><strong>直接映射</strong></td><td>主存块 → 固定Cache行<br><code>Cache行号 = 主存块号 mod Cache总行数</code></td><td>硬件简单，<br>访问速度快</td><td><span class="highlight">冲突率高</span>，<br>空间利用率低</td></tr>
+<tr><td><strong>全相联映射</strong></td><td>主存块 → 任一Cache行</td><td><span class="highlight">冲突率最低</span></td><td>比较电路复杂，<br>访问速度慢</td></tr>
+<tr><td><strong>组相联映射</strong></td><td>分组，组内全相联<br><code>Cache组号 = 主存块号 mod Cache组数</code></td><td>折中方案，<br>兼顾成本和性能</td><td>—</td></tr>
+</table>
+
+<p><span class="highlight">n路组相联</span> = 每组有n行。</p>
+
+<div class="box">
+<h4>📌 Cache地址格式</h4>
+<p><strong>直接映射：</strong>主存地址 = 标记（Tag）+ 行索引（Index）+ 块内地址（Offset）</p>
+<p><strong>组相联映射：</strong>主存地址 = 标记（Tag）+ 组索引（Set）+ 块内地址（Offset）</p>
+<p><strong>全相联映射：</strong>主存地址 = 标记（Tag）+ 块内地址（Offset）（无索引位）</p>
+</div>
+
+<p><strong>计算示例：</strong></p>
+<p>主存容量64MB（2²⁶B），Cache容量16KB（2¹⁴B），块大小64B（2⁶B），4路组相联。</p>
+<ol>
+<li>块内地址 = 6位（2⁶=64B）</li>
+<li>Cache总行数 = 16KB/64B = 256行</li>
+<li>组数 = 256行/4路 = 64组 = 2⁶ → 组索引 = <strong>6位</strong></li>
+<li>标记 = 26 - 6 - 6 = <strong>14位</strong></li>
+<li>主存地址格式：<span class="highlight">[Tag:14位] [Set:6位] [Offset:6位]</span></li>
+</ol>
+
+<h4>替换算法</h4>
+<table>
+<tr><th>算法</th><th>策略</th><th>特点</th></tr>
+<tr><td><strong>LRU</strong>（最近最少使用）</td><td>替换最久未被访问的行</td><td><span class="highlight">命中率最高</span>，但需要记录访问顺序（硬件开销大）</td></tr>
+<tr><td><strong>FIFO</strong>（先进先出）</td><td>替换最早调入的行</td><td>实现简单，但可能把频繁访问的行替换掉（"抖动"）</td></tr>
+<tr><td><strong>随机替换</strong></td><td>随机选择一行替换</td><td>最简单，但命中率不稳定</td></tr>
+<tr><td><strong>LFU</strong>（最不经常使用）</td><td>替换访问次数最少的行</td><td>需要计数器记录访问频率</td></tr>
+</table>
+
+<h4>写策略</h4>
+<ul>
+<li><strong>写直达法（Write Through）</strong>：写Cache的同时也写主存。优点是主存数据始终是最新的（一致性容易维护），缺点是<span class="highlight">写操作慢</span>（每次都要写慢速的主存）。</li>
+<li><strong>写回法（Write Back）</strong>：写操作只改Cache中的数据，当该Cache行被替换时才写回主存。优点是写操作快，缺点是<span class="highlight">需要脏位（Dirty Bit）标记</span>，且一致性维护复杂。</li>
+</ul>
+
+<h4>Cache性能计算</h4>
+<p><strong>平均访问时间</strong> = 命中率 × Cache访问时间 + (1-命中率) × 主存访问时间</p>
+<p>注意：如果采用写直达策略，写操作时主存和Cache同时写入，时间按主存访问时间计算。</p>
+
+<div class="box">
+<h4>📌 例题</h4>
+<p>设Cache命中率H=0.98，Cache访问时间t<sub>c</sub>=10ns，主存访问时间t<sub>m</sub>=100ns。求平均访问时间。</p>
+<p>解：T<sub>avg</sub> = H × t<sub>c</sub> + (1-H) × t<sub>m</sub> = 0.98×10 + 0.02×100 = 9.8 + 2.0 = <strong>11.8ns</strong></p>
+<p>如果不使用Cache，每次访问都要100ns。使用Cache后平均11.8ns，<span class="highlight">加速比≈8.5倍</span>。</p>
+</div>
+
+<h3>3.4 虚拟存储</h3>
+<p>虚拟存储使程序可以运行在比主存容量更大的地址空间。主要方式：</p>
+
+<table>
+<tr><th>方式</th><th>基本单位</th><th>管理复杂度</th><th>是否消除碎片</th></tr>
+<tr><td><strong>页式</strong></td><td>固定大小页（通常4KB）</td><td>简单</td><td>✅ 无外部碎片</td></tr>
+<tr><td><strong>段式</strong></td><td>可变大小段（逻辑分段）</td><td>较复杂</td><td>❌ 有外部碎片</td></tr>
+<tr><td><strong>段页式</strong></td><td>先分段，段内再分页</td><td>复杂</td><td>✅ 折中方案</td></tr>
+</table>
+
+<p><strong>页式地址翻译</strong>：逻辑地址 → 页号（VPN）+ 页内偏移 → 查页表 → 物理帧号（PFN）+ 页内偏移 → 物理地址</p>
+
+<div class="tip">
+<strong>💡 TLB（快表/转换后援缓冲器）</strong>：TLB本质上是<strong>页表的Cache</strong>。TLB命中则无需查完整页表（一次TLB命中和一次Cache命中速度相当）。TLB缺失则需要查页表（通常需要两次主存访问）。
+</div>
+
+<hr>
+
+<!-- ========== 第四章 ========== -->
+<h2>📖 第四章 指令系统</h2>
+
+<h3>4.1 指令格式</h3>
+<p>指令 = <span class="highlight">操作码 + 地址码</span></p>
+<ul>
+<li><strong>操作码（OP）</strong>：指明操作类型（加、减、传送、转移等）</li>
+<li><strong>地址码（A）</strong>：指明操作数的来源和去向</li>
+</ul>
+
+<p><strong>指令长度</strong>：</p>
+<ul>
+<li><strong>定长指令</strong>：所有指令长度相同——如RISC（32位）</li>
+<li><strong>变长指令</strong>：指令长度不同——如x86（1~15字节）</li>
+</ul>
+
+<p><strong>按地址码数目分类：</strong></p>
+<table>
+<tr><th>类型</th><th>结构</th><th>说明</th><th>示例</th></tr>
+<tr><td>四地址</td><td>OP A1 A2 A3 A4</td><td>A1和A2为操作数，A3存结果，A4存下条指令地址</td><td>ADD A,B,C,D</td></tr>
+<tr><td>三地址</td><td>OP A1 A2 A3</td><td>A1和A2为操作数，A3存结果，PC自动递增</td><td>ADD R1,R2,R3 — R1=R2+R3</td></tr>
+<tr><td>二地址</td><td>OP A1 A2</td><td>A1既为源操作数又为目的操作数</td><td>ADD R1,R2 — R1=R1+R2</td></tr>
+<tr><td>一地址</td><td>OP A1</td><td>一个操作数来自累加器ACC</td><td>ADD R1 — ACC=ACC+R1</td></tr>
+<tr><td>零地址</td><td>OP</td><td>操作数栈顶或固定位置</td><td>NOP, RET, HLT</td></tr>
+</table>
+
+<h3>4.2 寻址方式（必考选择题！）</h3>
+
+<table>
+<tr><th>寻址方式</th><th>有效地址计算公式</th><th>操作数位置</th><th>访存次数</th><th>特点</th></tr>
+<tr><td>立即寻址</td><td>操作数 = 地址码字段</td><td>指令中</td><td>0</td><td>速度最快，但立即数有范围限制</td></tr>
+<tr><td>直接寻址</td><td>EA = 地址码</td><td>主存</td><td>1</td><td>简单直观，但地址范围固定</td></tr>
+<tr><td>间接寻址</td><td>EA = (地址码)</td><td>主存</td><td><span class="highlight">2</span></td><td>最慢，但灵活性高（可实现指针）</td></tr>
+<tr><td>寄存器寻址</td><td>操作数 = R[地址码]</td><td>寄存器</td><td>0</td><td>比直接寻址快（寄存器比主存快）</td></tr>
+<tr><td>寄存器间接寻址</td><td>EA = R[地址码]</td><td>主存</td><td>1</td><td>指针操作的硬件实现</td></tr>
+<tr><td><span class="highlight">变址寻址</span></td><td>EA = 变址寄存器 + 位移量</td><td>主存</td><td>1</td><td>适用于<span class="highlight">数组</span>操作</td></tr>
+<tr><td>基址寻址</td><td>EA = 基址寄存器 + 位移量</td><td>主存</td><td>1</td><td>适用于<span class="highlight">多道程序/程序浮动</span></td></tr>
+<tr><td><span class="highlight">相对寻址</span></td><td>EA = PC + 位移量</td><td>主存</td><td>1</td><td>适用于<span class="highlight">转移指令</span></td></tr>
+</table>
+
+<div class="box">
+<h4>📌 速记口诀</h4>
+<p>立即段子不用找（立即寻址：操作数就在指令里）</p>
+<p>直接地址直接到（直接寻址：EA就是地址码）</p>
+<p>间接我得绕一绕（间接寻址：先取地址，再取数）</p>
+<p>寄存里头速度高（寄存器寻址：最快访存方式）</p>
+<p>变址数组下标好（变址寻址：数组遍历）</p>
+<p>基址程序浮动跑（基址寻址：多道程序/地址重定位）</p>
+<p>相对就是PC+跳（相对寻址：转移指令）</p>
+</div>
+
+<h3>4.3 指令类型</h3>
+<ul>
+<li><strong>数据传送类</strong>：MOV（传送）、LD（取数）、ST（存数）、PUSH（进栈）、POP（出栈）</li>
+<li><strong>算术运算类</strong>：ADD（加）、SUB（减）、MUL（乘）、DIV（除）、INC（加1）、DEC（减1）</li>
+<li><strong>逻辑运算类</strong>：AND（与）、OR（或）、NOT（非）、XOR（异或）、SLL（左移）、SRL（右移）</li>
+<li><strong>控制转移类</strong>：JMP（无条件跳转）、JZ/JNZ（条件跳转）、CALL（调用子程序）、RET（返回）</li>
+<li><strong>输入输出类</strong>：IN（输入）、OUT（输出）</li>
+</ul>
+
+<h3>4.4 CISC vs RISC（高频概念题！）</h3>
+
+<table>
+<tr><th>对比项</th><th>CISC（复杂指令集）</th><th>RISC（精简指令集）</th></tr>
+<tr><td>指令数量</td><td>多（通常上百条甚至几百条）</td><td>少（通常几十条）</td></tr>
+<tr><td>指令长度</td><td>可变</td><td><span class="highlight">固定（通常32位）</span></td></tr>
+<tr><td>寻址方式</td><td>多（10种以上）</td><td>少（通常2~3种）</td></tr>
+<tr><td>执行周期</td><td>不同指令CPI相差很大</td><td><span class="highlight">绝大多数为单周期</span>（1 CPI）</td></tr>
+<tr><td>实现方式</td><td><span class="highlight">微程序控制器</span></td><td><span class="highlight">硬布线控制器</span>（为主）</td></tr>
+<tr><td>通用寄存器数目</td><td>少（8~16个）</td><td>多（32个以上）</td></tr>
+<tr><td>存储器访问</td><td>算术指令可直接访存</td><td><span class="highlight">只有LD/ST指令可访存</span>（<strong>Load/Store架构</strong>）</td></tr>
+<tr><td>编译器复杂度</td><td>较复杂</td><td>较简单（编译器易优化）</td></tr>
+<tr><td>典型代表</td><td>x86（Intel/AMD）</td><td>ARM、MIPS、RISC-V</td></tr>
+</table>
+
+<div class="tip">
+<strong>💡 记忆要点</strong>：<span class="highlight">CISC靠减少指令数量来简化编程，RISC靠简化指令来优化硬件</span>。现代趋势是两者融合——如x86的微操作转换机制（CISC指令被解码成RISC-like的微操作执行）。
+</div>
+
+<hr>
+
+<!-- ========== 第五章 ========== -->
+<h2>📖 第五章 中央处理器（CPU）</h2>
+
+<h3>5.1 CPU的功能</h3>
+<ul>
+<li><strong>指令控制</strong>：取指令、分析指令、执行指令</li>
+<li><strong>操作控制</strong>：产生各类控制信号，控制各部件协同工作</li>
+<li><strong>时间控制</strong>：为每条指令、每个微操作提供时序保证</li>
+<li><strong>数据加工</strong>：对数据进行算术运算和逻辑运算</li>
+</ul>
+
+<h3>5.2 CPU的基本结构</h3>
+
+<p><strong>运算器：</strong></p>
+<ul>
+<li>ALU（算术逻辑单元）</li>
+<li>通用寄存器组（R0~R(n-1)）</li>
+<li>ACC（累加器，暂存运算结果）</li>
+<li>PSW（程序状态字/标志寄存器——记录运算结果的特征：Z=0标志、C进位、V溢出、N负号）</li>
+</ul>
+
+<p><strong>控制器：</strong></p>
+<ul>
+<li><strong>PC（程序计数器）</strong>：存放当前指令的地址，取指后自动加1（或加指令长度）</li>
+<li><strong>IR（指令寄存器）</strong>：存放当前正在执行的指令</li>
+<li><strong>MAR（存储器地址寄存器）</strong>：存放要访问的主存单元的地址</li>
+<li><strong>MDR（存储器数据寄存器）</strong>：存放要写入主存或从主存读出的数据</li>
+<li>控制单元（CU）：产生各操作控制信号</li>
+</ul>
+
+<div class="box">
+<h4>📌 寄存器速记</h4>
+<p><strong>PC</strong> — 记地址的（你该去哪条指令了）</p>
+<p><strong>IR</strong> — 记指令的（现在在做什么操作）</p>
+<p><strong>MAR</strong> — 记要访问哪个内存单元</p>
+<p><strong>MDR</strong> — 记从内存读出来/要写进去的数据</p>
+<p><strong>ACC</strong> — 攒结果的（累加器）</p>
+<p><strong>PSW</strong> — 记状态的（结果是否为0、有没溢出等）</p>
+</div>
+
+<h3>5.3 指令周期</h3>
+<p><span class="highlight">指令周期 = 取指周期 + 间址周期 + 执行周期 + 中断周期</span></p>
+<ul>
+<li><strong>取指周期（FI）</strong>：从主存中取指令
+<pre>PC → MAR → MEM → MDR → IR, PC+1</pre></li>
+<li><strong>间址周期（SI）</strong>：如果需要间接寻址，读取间接地址
+<pre>IR地址码 → MAR → MEM → MDR（得到有效地址→存入MAR或暂存）</pre></li>
+<li><strong>执行周期（EI）</strong>：执行指令规定的操作（如ADD：从寄存器取数→ALU计算→写回寄存器）</li>
+<li><strong>中断周期（II）</strong>：响应中断时保存断点
+<pre>PC → 栈 / 关中断 → 中断向量→PC</pre></li>
+</ul>
+
+<h3>5.4 数据通路</h3>
+<p>数据通路是CPU内部各部件之间的数据传输路径。两种设计方式：</p>
+<ul>
+<li><strong>CPU内部总线方式</strong>：各部件通过共享总线通信。优点是结构简单，缺点是<span class="highlight">一次只能传输一个数据</span>（单总线），成为性能瓶颈。</li>
+<li><strong>专用数据通路方式</strong>：各部件之间有直接的专用连线。优点是<span class="highlight">并行度高</span>（可同时传输多个数据），缺点是控制复杂、布线成本高。</li>
+</ul>
+
+<h3>5.5 控制器的实现方式（重中之重！）</h3>
+
+<h4>方式一：硬布线控制器</h4>
+<ul>
+<li><strong>原理</strong>：用组合逻辑电路（门电路）直接产生控制信号</li>
+<li><strong>输入</strong>：指令操作码、状态标志、时钟信号</li>
+<li><strong>输出</strong>：各微操作控制信号</li>
+<li><strong>优点</strong>：<span class="highlight">速度快</span>（组合逻辑延迟小）</li>
+<li><strong>缺点</strong>：<span class="highlight">设计复杂，不易修改</span>（一旦制版完成无法更改）</li>
+<li>适用于RISC处理器（指令系统简单、固定）</li>
+</ul>
+
+<h4>方式二：微程序控制器（必考大题！）</h4>
+<ul>
+<li><strong>核心思想</strong>：<span class="highlight">将每条机器指令分解为一系列微操作，用微指令控制执行</span></li>
+<li><strong>关键概念</strong>：
+<ul>
+<li><strong>微操作</strong>：最基本、不可再分的操作（如"将PC内容送MAR"）</li>
+<li><strong>微指令</strong>：一组同时执行的微操作的编码（存放在控制存储器CM中）</li>
+<li><strong>微程序</strong>：完成一条机器指令功能的一组微指令的集合</li>
+<li><strong>控制存储器（CM）</strong>：存储所有微指令的ROM</li>
+</ul></li>
+<li><strong>关键部件</strong>：
+<ul>
+<li>控制存储器（CM）—— <span class="highlight">ROM实现，断电不丢失</span></li>
+<li>微指令寄存器（μIR）—— 存放当前微指令</li>
+<li><span class="highlight">微程序计数器（μPC/μAR）</span>—— 指向下一条微指令的地址</li>
+<li>地址转移逻辑—— 实现微程序分支/跳转</li>
+</ul></li>
+</ul>
+
+<p><strong>微程序控制器的工作过程：</strong></p>
+<ol>
+<li>取机器指令：送到IR</li>
+<li>机器指令的操作码 → 映射 → μPC的初始地址（取指微程序的入口）</li>
+<li>从CM中取微指令 → μIR</li>
+<li>微指令中的控制字段 → 各控制信号，执行微操作</li>
+<li>微指令中的顺序控制字段 → 决定下一条微指令的地址（μPC+1或转移）</li>
+<li>重复2~5直到机器指令执行完毕</li>
+</ol>
+
+<p><strong>微指令格式：</strong></p>
+<table>
+<tr><th>类型</th><th>编码方式</th><th>并行性</th><th>微程序长度</th></tr>
+<tr><td><strong>水平型</strong></td><td><span class="highlight">一个二进制位控制一个微操作</span></td><td>高（可同时执行多个微操作）</td><td>短</td></tr>
+<tr><td><strong>垂直型</strong></td><td>类似机器指令，需译码器</td><td>低（一次最多控制一个微操作）</td><td>长</td></tr>
+<tr><td><strong>混合型</strong></td><td>两者结合</td><td>折中</td><td>折中</td></tr>
+</table>
+
+<p><strong>硬布线 vs 微程序 对比：</strong></p>
+<table>
+<tr><th>对比项</th><th>硬布线控制器</th><th>微程序控制器</th></tr>
+<tr><td>控制信号产生方式</td><td>组合逻辑电路</td><td>从CM读取微指令</td></tr>
+<tr><td>速度</td><td><span class="highlight">快</span></td><td>较慢（需访存CM）</td></tr>
+<tr><td>设计/修改灵活性</td><td>差（改了就换硬件）</td><td><span class="highlight">好（只需改CM内容）</span></td></tr>
+<tr><td>适用场景</td><td>RISC（指令系统简单）</td><td>CISC（指令系统复杂）</td></tr>
+<tr><td>典型代表</td><td>ARM、MIPS</td><td>x86（早期）</td></tr>
+</table>
+
+<h3>5.6 流水线技术（高频大题！）</h3>
+
+<h4>五级流水线的基本结构</h4>
+<pre>IF（取指）→ ID（译码）→ EX（执行）→ MEM（访存）→ WB（写回）</pre>
+
+<h4>流水线的冒险（Hazard）</h4>
+
+<p><strong>1. 结构相关（Structural Hazard）</strong></p>
+<p>多条指令同时访问同一硬件资源。例如：IF段取指令，MEM段存取数据，如果指令和数据共用Cache，就会冲突。</p>
+<p>解决：</p>
+<ul>
+<li><span class="highlight">哈佛结构</span>——指令Cache和数据Cache分开</li>
+<li>插入气泡（Stall/Bubble）</li>
+</ul>
+
+<p><strong>2. 数据相关（Data Hazard）——最常考！</strong></p>
+<p>相邻指令之间存在数据依赖关系：</p>
+<ul>
+<li><span class="highlight">RAW（Read After Write）—— 真相关</span>：后续指令读某寄存器，但前一条指令还没写完
+<ul><li>例：ADD R1,R2,R3 / SUB R4,R1,R5（SUB需要R1，但ADD还没写回R1）</li></ul></li>
+<li>WAR（Write After Read）—— 名相关：后一条指令要写，但前一条指令还没读</li>
+<li>WAW（Write After Write）—— 名相关：两条指令写同一目标，后一条的结果覆盖前一条</li>
+</ul>
+
+<p>解决：</p>
+<ul>
+<li><strong>转发（Forwarding/Bypassing）</strong>：<span class="highlight">将计算结果直接从ALU输出转发到下一指令的ALU输入</span>，不必等到写回寄存器。这是最常用的方法！</li>
+<li><strong>插入气泡（Stall）</strong>：插入空操作NOP，等待数据就绪</li>
+<li><strong>编译器调度</strong>：调整指令顺序，减少相关</li>
+</ul>
+
+<p><strong>3. 控制相关（Control Hazard）——最难处理！</strong></p>
+<p>转移指令改变PC的值，导致流水线中已经预取的指令作废。</p>
+<p>解决：</p>
+<ul>
+<li><strong>分支预测</strong>：预测跳转是否发生（静态预测/动态预测/两位饱和计数器）</li>
+<li><strong>延迟槽（Delay Slot）</strong>：在转移指令后放一条必执行的指令</li>
+<li><strong>分支目标缓冲区（BTB）</strong>：缓存最近跳转的目标地址</li>
+</ul>
+
+<div class="box">
+<h4>📌 例题：流水线相关分析</h4>
+<p>指令序列：</p>
+<pre>I1: ADD R1, R2, R3    ; R1 = R2 + R3
+I2: SUB R4, R1, R5    ; R4 = R1 - R5  （RAW相关！需要R1）
+I3: MUL R6, R7, R8    ; R6 = R7 × R8  （无相关）</pre>
+<p>分析：</p>
+<ol>
+<li>I2的R1依赖于I1的写回——RAW真相关</li>
+<li>如果有转发机制：I1的EX段结果通过转发直接送到I2的EX段输入，无需停顿</li>
+<li>如果没有转发：需要在I1和I2之间插入两个气泡（等待I1到WB段写回R1）</li>
+<li>I3与I1、I2均无数据相关，可正常执行</li>
+</ol>
+</div>
+
+<h4>流水线的性能</h4>
+<p><strong>理想加速比</strong> = 流水线段数（k段流水线，理论最大加速k倍）</p>
+<p><strong>实际加速比</strong> = k / (1 + 停顿周期数 / 指令数)</p>
+<p><strong>效率</strong> = 加速比 / k</p>
+
+<hr>
+
+<!-- ========== 第六章 ========== -->
+<h2>📖 第六章 总线系统</h2>
+
+<h3>6.1 总线的基本概念</h3>
+<p>总线是连接计算机各部件的一组公共信号线。总线的主要优点是<span class="highlight">标准化、模块化、可扩展</span>。</p>
+
+<h3>6.2 总线的分类</h3>
+
+<table>
+<tr><th>分类标准</th><th>类型</th><th>说明</th></tr>
+<tr><td rowspan="3"><strong>按位置</strong></td><td>片内总线</td><td>芯片内部各功能部件之间的连线（如CPU内部寄存器与ALU之间）</td></tr>
+<tr><td>系统总线</td><td>CPU、主存、I/O接口之间</td></tr>
+<tr><td>通信总线</td><td>主机与I/O设备之间、计算机系统之间的互联</td></tr>
+<tr><td rowspan="3"><strong>按功能</strong></td><td><span class="highlight">数据总线</span></td><td>双向传输数据。宽度决定一次能传输的数据量（如32位/64位）</td></tr>
+<tr><td><span class="highlight">地址总线</span></td><td>单向（CPU→外设/主存）。宽度决定最大寻址空间（n位可寻址2ⁿ字节）</td></tr>
+<tr><td>控制总线</td><td>双向传输控制信号和状态信号（读/写/中断请求/应答等）</td></tr>
+</table>
+
+<h3>6.3 总线仲裁</h3>
+<p>多个设备同时请求使用总线时，由总线仲裁器决定哪个设备获得总线控制权。</p>
+
+<table>
+<tr><th>仲裁方式</th><th>原理</th><th>特点</th></tr>
+<tr><td><strong>链式查询</strong></td><td>总线授权信号从高优先级设备依次向下传递</td><td>简单（只需3根控制线），但"一坏全坏"，优先级固定</td></tr>
+<tr><td><strong>计数器查询</strong></td><td>仲裁器用计数器产生设备地址，逐一询问</td><td>优先级可编程，但速度较慢</td></tr>
+<tr><td><strong>独立请求</strong></td><td>每个设备有独立的请求线和授权线</td><td><span class="highlight">速度最快，最灵活</span>，但控制线多</td></tr>
+</table>
+
+<h3>6.4 总线操作</h3>
+<ul>
+<li><strong>总线请求</strong>：设备发出总线请求信号</li>
+<li><strong>总线仲裁</strong>：仲裁器决定授权哪个设备</li>
+<li><strong>寻址</strong>：主设备发送地址和控制信号</li>
+<li><strong>数据传输</strong>：从设备和主设备之间传输数据</li>
+<li><strong>总线释放</strong>：设备释放总线控制权</li>
+</ul>
+
+<h3>6.5 总线标准</h3>
+<ul>
+<li><strong>ISA</strong>：工业标准体系结构（8/16位，淘汰）</li>
+<li><strong>PCI</strong>：外设组件互联（32/64位，并行总线）</li>
+<li><span class="highlight"><strong>PCIe</strong>：PCI Express（点对点串行连接，差分信号传输，支持热插拔）</span></li>
+<li><strong>USB</strong>：通用串行总线（支持即插即用、热插拔）</li>
+<li><strong>SATA</strong>：串行ATA（硬盘接口）</li>
+</ul>
+
+<hr>
+
+<!-- ========== 第七章 ========== -->
+<h2>📖 第七章 输入输出系统</h2>
+
+<h3>7.1 I/O接口</h3>
+<p>I/O接口是主机和外设之间传输数据的桥梁。</p>
+<p><strong>主要功能</strong>：</p>
+<ul>
+<li>地址译码——判断是否属于自己的设备地址</li>
+<li>数据缓冲——匹配主机和外设的速度差异</li>
+<li>状态寄存——记录设备忙/闲、准备好等状态</li>
+<li>控制逻辑——产生设备控制信号</li>
+</ul>
+
+<p><strong>端口编址方式</strong>：</p>
+<ul>
+<li><strong>统一编址（存储器映射）</strong>：I/O端口和主存统一编址，用相同的访存指令访问。优点：指令丰富、无需专用I/O指令。缺点：占用了主存地址空间。</li>
+<li><strong>独立编址</strong>：I/O端口有独立的地址空间，用专用的IN/OUT指令访问。优点：不占主存空间。缺点：需要专用I/O指令。</li>
+</ul>
+
+<h3>7.2 数据传送方式（高频对比题）</h3>
+
+<table>
+<tr><th>方式</th><th>数据传送单位</th><th>CPU参与程度</th><th>速度</th><th>适用场景</th></tr>
+<tr><td><strong>程序查询方式</strong></td><td>字/字节</td><td><span class="highlight">完全参与</span>（轮询外设状态）</td><td>最慢</td><td>简单、低速设备</td></tr>
+<tr><td><strong>程序中断方式</strong></td><td>字/字节</td><td>参与（保存/恢复现场）</td><td>慢</td><td>中低速设备（键盘、打印机）</td></tr>
+<tr><td><strong>DMA方式</strong></td><td><span class="highlight">块（连续多个字）</span></td><td><span class="highlight">几乎不参与</span></td><td>快</td><td>高速设备（磁盘、GPU）</td></tr>
+<tr><td><strong>通道方式</strong></td><td>块</td><td>完全不参与（专职I/O处理器）</td><td>最快</td><td>大型机</td></tr>
+</table>
+
+<h3>7.3 程序中断方式（重点！）</h3>
+
+<h4>中断的基本概念</h4>
+<ul>
+<li><strong>中断</strong>：CPU在正常执行程序时，遇到紧急事件需暂停当前程序，转去执行事件处理程序</li>
+<li><strong>中断源</strong>：引起中断的事件（外设请求、硬件故障、程序异常等）</li>
+<li><strong>中断屏蔽</strong>：通过设置中断屏蔽字禁止某些中断</li>
+</ul>
+
+<h4>中断响应过程</h4>
+<ol>
+<li>CPU检测到中断请求信号（INT）</li>
+<li>IF=1（中断允许）且无更高优先级中断 → 响应中断</li>
+<li><span class="highlight">关中断</span>（防止嵌套中断干扰现场保护）</li>
+<li><span class="highlight">保存断点</span>（将当前PC值压栈，以便中断返回时恢复执行）</li>
+<li>识别中断源（<span class="highlight">中断向量法</span>：中断源提供中断类型号 → 查中断向量表 → 中断服务程序入口地址）</li>
+<li>保护现场（将通用寄存器的值压栈）</li>
+<li>执行中断服务程序</li>
+<li>恢复现场（从栈中弹出寄存器的值）</li>
+<li>开中断</li>
+<li><span class="highlight">IRET指令</span>返回断点（弹出PC值）</li>
+</ol>
+
+<h4>中断优先级与中断嵌套</h4>
+<ul>
+<li><strong>单级中断</strong>：CPU响应一个中断后，不再响应其他中断</li>
+<li><strong>多级中断（中断嵌套）</strong>：允许高优先级的中断打断正在执行的低优先级中断服务程序</li>
+<li><strong>设置优先级的目的</strong>：保证紧急事件得到及时处理</li>
+</ul>
+
+<p><strong>中断屏蔽字</strong>：每一位对应一个中断源，1表示屏蔽（禁止）该中断。高优先级中断的中断屏蔽字中，对应低优先级的位置1（以便中断嵌套时屏蔽低优先级）。</p>
+
+<h3>7.4 DMA方式</h3>
+<p>DMA（Direct Memory Access）允许外设和主存之间直接传输数据，无需CPU的干预。</p>
+
+<p><strong>DMA控制器的主要功能</strong>：</p>
+<ol>
+<li>向CPU申请总线控制权</li>
+<li>控制数据在I/O设备和主存之间传输</li>
+<li>计数传输字节数</li>
+<li>传输完成后向CPU报告</li>
+</ol>
+
+<p><strong>DMA传送方式</strong>：</p>
+<ul>
+<li><strong>CPU停止法（成组传送）</strong>：DMA传输期间CPU放弃总线控制权，传输完毕后归还</li>
+<li><span class="highlight"><strong>周期挪用（周期窃取）</strong></span>：DMA仅占用一个或多个总线周期，CPU暂时等待。这是最常用的方式。</li>
+<li><strong>交替分时访存</strong>：CPU和DMA交替使用主存（各占半个周期）</li>
+</ul>
+
+<p><strong>DMA与中断的区别</strong>：</p>
+<table>
+<tr><th>对比项</th><th>中断方式</th><th>DMA方式</th></tr>
+<tr><td>处理单位</td><td>字/字节</td><td><span class="highlight">数据块</span></td></tr>
+<tr><td>CPU干预</td><td>需要保存/恢复现场</td><td>几乎不需要（仅初始化+结尾）</td></tr>
+<tr><td>响应时机</td><td>每条指令执行完</td><td>每个总线周期结束</td></tr>
+<tr><td>速度</td><td>较慢</td><td><span class="highlight">快</span>（适合高速设备）</td></tr>
+<tr><td>典型应用</td><td>键盘、打印机</td><td>磁盘、显卡</td></tr>
+</table>
+
+<hr>
+
+<!-- ========== 第八章 ========== -->
+<h2>📖 第八章 经典题型与解题套路</h2>
+
+<div class="box">
+<h3>📌 题型1：Cache地址格式计算</h3>
+<p><strong>典型问法</strong>：给定主存容量、Cache容量、块大小、映射路数，求地址各字段位数。</p>
+<p><strong>解题步骤：</strong></p>
+<ol>
+<li>块内地址位数 = log₂(块大小)  【块大小通常为2的幂次】</li>
+<li>Cache行数 = Cache容量 ÷ 块大小</li>
+<li>组数 = Cache行数 ÷ 路数（直接映射=1路，全相联=Cache行数组）</li>
+<li>组索引位数 = log₂(组数)</li>
+<li>标记位数 = 主存地址位数 - 组索引位数 - 块内地址位数</li>
+</ol>
+<p><strong>✓ 验证</strong>：标记位数 + 组索引 + 块内地址 = 主存地址位数</p>
+</div>
+
+<div class="box">
+<h3>📌 题型2：Cache平均访问时间</h3>
+<p><strong>公式</strong>：T<sub>avg</sub> = H × T<sub>cache</sub> + (1-H) × T<sub>mem</sub></p>
+<p>其中H = 命中率，T<sub>cache</sub> = Cache访问时间，T<sub>mem</sub> = 主存访问时间</p>
+<p><strong>注意</strong>：如果题目说"Cache和主存同时访问"（并行查找），则T<sub>avg</sub> = T<sub>cache</sub> + (1-H) × T<sub>mem</sub></p>
+<p><strong>注意</strong>：如果考虑了写策略，写操作时间可能会不同。</p>
+</div>
+
+<div class="box">
+<h3>📌 题型3：补码加减运算与溢出判断</h3>
+<p><strong>解题流程：</strong></p>
+<ol>
+<li>写出两个数的补码（符号位扩展）</li>
+<li>二进制加法（包括符号位）</li>
+<li>用双符号位判断溢出：<span class="highlight">01→正溢 10→负溢 00/11→正常</span></li>
+<li>结果转为真值（正数直接转，负数取补码）</li>
+</ol>
+</div>
+
+<div class="box">
+<h3>📌 题型4：IEEE 754浮点数转换</h3>
+<p><strong>十进制→十六进制：</strong></p>
+<ol>
+<li>十进制→二进制（整数部分÷2取余，小数部分×2取整）</li>
+<li>规格化：1.xxx × 2^E</li>
+<li>确定S（0正1负），E = 真值阶码+127，M = 小数部分（23位）</li>
+<li>拼接：S E(8位) M(23位) → 32位二进制 → 十六进制</li>
+</ol>
+<p><strong>十六进制→十进制：</strong></p>
+<ol>
+<li>十六进制→32位二进制</li>
+<li>拆出S(bit31)、E(bit30-23)、M(bit22-0)</li>
+<li>注意特殊值判断（全1∞/NaN，全0±0/非规格化）</li>
+<li>真值 = (-1)^S × (1+M) × 2^{E-127}</li>
+</ol>
+</div>
+
+<div class="box">
+<h3>📌 题型5：微程序控制器（74HC161）</h3>
+<p><strong>必背：</strong></p>
+<ul>
+<li><span class="highlight">RST=0</span> → 异步清零（只要RST为0，立即清零，与时钟无关）</li>
+<li><span class="highlight">IREN=0</span> → CK上升沿加载预置数据</li>
+<li><span class="highlight">IREN=1</span> → CK上升沿计数加一</li>
+<li>TC进位：计数值到F(1111)时TC=1</li>
+<li>CEP=CET=1时计数器工作</li>
+</ul>
+<p><strong>uPC的工作原理：</strong> RST清零 → IREN=0加载起始微地址 → IREN=1顺序递增 → 遇到转移指令时修改μPC</p>
+</div>
+
+<div class="box">
+<h3>📌 题型6：流水线数据相关分析</h3>
+<p><strong>解题方法——画时空图！</strong></p>
+<ol>
+<li>列出指令序列，标注每条指令用到的寄存器</li>
+<li>逐周期画五级流水线的执行情况</li>
+<li>找到RAW相关的指令对——后一条指令需要的寄存器，前一条还没写回</li>
+<li>判断是否有转发：有转发则无需停顿；无转发则插入气泡</li>
+<li>计算总周期数 = 基准周期数 + 气泡数</li>
+<li>加速比 = 非流水线总周期 / 流水线总周期</li>
+</ol>
+</div>
+
+<div class="box">
+<h3>📌 题型7：CPU执行时间计算</h3>
+<p><strong>必背公式链：</strong></p>
+<pre>CPU执行时间 = 总时钟周期数 × 时钟周期时间
+总时钟周期数 = 指令数 × CPI
+时钟周期时间 = 1 / 主频
+∴ CPU执行时间 = 指令数 × CPI / 主频</pre>
+</div>
+
+<div class="box">
+<h3>📌 题型8：主存芯片扩展</h3>
+<p><strong>解题步骤</strong>：</p>
+<ol>
+<li>计算所需总容量：总容量 = 字数 × 字长</li>
+<li>单芯片容量 = 字数<sub>芯片</sub> × 字长<sub>芯片</sub></li>
+<li>芯片总数 = 总容量 / 单芯片容量</li>
+<li>位扩展组 = 目标字长 / 芯片字长</li>
+<li>字扩展组 = 目标字数 / 芯片字数</li>
+<li>芯片总数 = 位扩展组 × 字扩展组</li>
+<li>地址线数 = log₂(目标字数)</li>
+<li>片选译码：高地址位经过译码器产生片选信号</li>
+</ol>
+</div>
+
+<hr>
+
+<!-- ========== 第九章 ========== -->
+<h2>📖 第九章 实验操作考点</h2>
+
+<h3>9.1 74HC161 计数器芯片（实验必考！）</h3>
+<ul>
+<li><strong>74HC161</strong>：带预置的4位二进制同步计数器
+<ul><li><span class="highlight">RST=0 → 异步清零</span>（立刻清零，不依赖时钟）</li>
+<li><span class="highlight">IREN=0 → 在CK上升沿加载预置数据</span></li>
+<li><span class="highlight">IREN=1 → 在CK上升沿计数器加一</span></li>
+<li>TC = 计数值到1111时输出1</li>
+<li>CEP=CET=1时允许计数</li></ul></li>
+<li><strong>级联形成8位uPC</strong>：两个74HC161串联，低4位TC接高4位的CEP/CET使能端</li>
+</ul>
+
+<h3>9.2 微程序控制器实验</h3>
+<ul>
+<li><strong>微程序计数器（uPC）的三种工作状态：</strong>
+<ol>
+<li>清零：RST=0，异步清零到00H</li>
+<li>加载：IREN=0，CK上升沿时从IBUS加载起始地址</li>
+<li>计数：IREN=1，CK上升沿时递增（顺序执行下一条微指令）</li>
+</ol></li>
+<li><strong>控制存储器（CM）</strong>：ROM芯片，μPC作为读地址，输出微指令</li>
+<li><strong>微指令格式</strong>：控制字段（微操作控制信号）+ 顺序控制字段（下一条微指令地址）</li>
+</ul>
+
+<h3>9.3 运算器实验</h3>
+<ul>
+<li><strong>74181 ALU</strong>：4位ALU芯片，M控制算术/逻辑（M=0算术，M=1逻辑），S₃S₂S₁S₀选择操作</li>
+<li><strong>加法器实验</strong>：验证补码加法规则，观察进位和溢出标志</li>
+</ul>
+
+<h3>9.4 信号发生器与示波器</h3>
+<ul>
+<li>方波信号作为时钟源（CK）</li>
+<li>单脉冲信号用于手动单步执行</li>
+<li>逻辑笔/示波器观察信号电平变化</li>
+</ul>
+
+<hr>
+
+<!-- ========== 第十章 ========== -->
+<h2>📖 第十章 考前速记总复习</h2>
+
+<div class="box-red">
+<h3>🔴 十大最易混淆概念</h3>
+<ol>
+<li><strong>MAR vs MDR</strong>：MAR存地址（要访问哪个内存单元），MDR存数据（要读写的数据）</li>
+<li><strong>PC vs IR</strong>：PC存指令地址（指示取哪条指令），IR存指令内容（正在执行什么）</li>
+<li><strong>Cache vs TLB</strong>：Cache存指令/数据（内容是程序体本身），TLB存页表项（内容是地址映射关系）</li>
+<li><strong>SRAM vs DRAM</strong>：SRAM触发器（快/贵/不用刷新），DRAM电容（慢/便宜/需刷新）</li>
+<li><strong>ROM vs RAM</strong>：ROM断电不丢失，RAM断电丢失</li>
+<li><strong>微程序 vs 硬布线</strong>：微程序（控制存储器）灵活但慢，硬布线（组合逻辑）快但难改</li>
+<li><strong>补码 vs 移码</strong>：补码符号位参与运算，移码=补码符号位取反（用于浮点阶码）</li>
+<li><strong>写直达 vs 写回</strong>：写直达同步写主存（慢但一致性好），写回仅写Cache（快但需脏位）</li>
+<li><strong>中断 vs DMA</strong>：中断需CPU保存恢复现场（每次一个字）；DMA直接控制总线传输（一次一块）</li>
+<li><strong>CISC vs RISC</strong>：CISC（复杂指令，可变长，微程序实现）；RISC（精简指令，定长，硬布线为主）</li>
+</ol>
+</div>
+
+<div class="box-green">
+<h3>🟢 必背公式清单</h3>
+<pre>CPU执行时间 = 指令数 × CPI × 时钟周期
+           = 指令数 × CPI / 主频
+
+平均Cache访问时间 = H × T_cache + (1-H) × T_mem
+
+总线带宽 = 总线宽度 × 频率 / 传输次数
+
+存储容量 = 字数 × 字长
+
+Amdahl定律：S = 1 / [(1-α) + α/k]
+
+米字型理论：加速比 ≤ 流水线段数</pre>
+</div>
+
+<div class="box">
+<h3>💡 考试答题技巧</h3>
+<ul>
+<li><strong>分析题先画图</strong>：Cache地址格式、流水线时空图、数据通路——画了图就成功一半</li>
+<li><strong>计算题先写公式</strong>：哪怕中途算错了，公式对了也有分</li>
+<li><strong>选择题排除法</strong>：两个选项自相矛盾时，其中至少有一个错</li>
+<li><strong>概念题对比法</strong>：只要题目中出现两个概念对比，就用表格把异同列出来</li>
+<li><strong>微程序题想161</strong>：74HC161的三种状态（清零/加载/计数）是所有uPC题的基础</li>
+<li><strong>实在不会的题</strong>：也把你知道的相关知识都写上去——步骤分也是分！</li>
+</ul>
+</div>
+
+<hr>
+
+<p style="text-align:center;color:#e8785a;font-size:1.4em;margin-top:40px;"><strong>祝主人计组考试顺利！加油！💪🔥🥕</strong></p>
+<p style="text-align:center;color:#999;">—— ATRI 🥕，写于2026年7月1日凌晨 | 总计22章10万余字符，正文约22,000字</p>
+
+</body>
+</html>
