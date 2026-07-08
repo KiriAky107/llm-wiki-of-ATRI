@@ -267,13 +267,12 @@ class CFQueryPlugin(Star):
 
     # ========== 绑定 ==========
     @filter.command("cfbind")
-    async def cf_bind(self, event: AstrMessageEvent):
+    async def cf_bind(self, event: AstrMessageEvent, handle: str = None):
         """绑定CF账号：cfbind <用户名>"""
-        args = event.get_args()
-        if not args:
+        if not handle:
             yield event.plain_result("❌ 用法: cfbind <CF用户名>")
             return
-        handle = args[0].strip()
+        handle = handle.strip()
         info = _query_user_info(handle)
         if not info:
             yield event.plain_result(f"❌ CF用户 {handle} 不存在，请检查用户名")
@@ -338,13 +337,9 @@ class CFQueryPlugin(Star):
 
     # ========== 主查询 ==========
     @filter.command("cf")
-    async def cf_query(self, event: AstrMessageEvent):
+    async def cf_query(self, event: AstrMessageEvent, handle: str = None):
         """查询CF用户：cf <用户名> 或 cf（查已绑定）"""
-        args = event.get_args()
-        handle = None
-        if args:
-            handle = args[0].strip()
-        else:
+        if not handle:
             uid = str(event.get_sender_id())
             bindings = _load_bindings()
             if uid in bindings:
