@@ -389,7 +389,7 @@ class CFQueryPlugin(Star):
             for a in analysis["recent_ac"][:5]:
                 rtg = f"[{a['rating']}]" if a["rating"] else "[?]"
                 lines.append(f"  ✅ {a['pid']} {rtg} {a['name']}")
-        yield event.plain_result("\n".join(lines))
+        text_report = "\n".join(lines)
 
         # --- 图表 ---
         ts = int(time.time())
@@ -403,14 +403,17 @@ class CFQueryPlugin(Star):
         tc = str(self.temp_dir / f"cf_tags_{handle}_{ts}.png")
         if _generate_tag_chart(handle, analysis["tag_dist"], tc):
             charts.append(tc)
-        if not charts:
-            return
 
         style = self.config.get("default_chart_style", "combined")
-        if style == "combined" and len(charts) >= 2:
-            combined = str(self.temp_dir / f"cf_combined_{handle}_{ts}.png")
-            if _combine_charts(charts, combined):
-                yield event.image_result(combined)
-                return
-        for c in charts:
-            yield event.image_result(c)
+        if charts:
+            if style == "combined" and len(charts) >= 2:
+                combined = str(self.temp_dir / f"cf_combined_{handle}_{ts}.png")
+                if _combine_charts(charts, combined):
+                    yield event.image_result(combined)
+                    return
+            for c in charts:
+                yield event.image_result(c)
+            return
+
+        # 没有图表时才发文本报告
+        yield event.plain_result(text_report)
