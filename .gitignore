@@ -12,3 +12,6 @@ Thumbs.db
 
 # API用量数据（不提交）
 usage_data/
+
+# HTML文件（根目录不保留，图片等在对应目录下提交）
+*.html
