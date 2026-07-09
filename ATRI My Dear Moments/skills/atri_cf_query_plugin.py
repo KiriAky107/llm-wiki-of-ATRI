@@ -491,7 +491,7 @@ class CFQueryPlugin(Star):
             # 再用AI生成分析文本
             try:
                 analysis_prompt = _build_analysis_prompt(handle, user_info, history, analysis)
-                provider_id = self.context.get_current_chat_provider_id(event.unified_msg_origin)
+                provider_id = await self.context.get_current_chat_provider_id(event.unified_msg_origin)
                 llm_resp = await self.context.llm_generate(
                     chat_provider_id=provider_id,
                     prompt=analysis_prompt,
