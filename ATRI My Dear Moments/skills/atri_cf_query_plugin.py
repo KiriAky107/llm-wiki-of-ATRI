@@ -291,8 +291,7 @@ def _build_text_report(handle: str, user_info: dict, history: list, analysis: di
         for a in s["recent_ac"][:5]:
             rtg = f"[{a['rating']}]" if a["rating"] else "[?]"
             lines.append(f"  ✅ {a['pid']} {rtg} {a['name']}")
-    return "
-".join(lines)
+    return "\n".join(lines)
 
 
 def _build_analysis_prompt(handle: str, user_info: dict, history: list, analysis: dict) -> str:
@@ -306,8 +305,7 @@ def _build_analysis_prompt(handle: str, user_info: dict, history: list, analysis
     best_rank = min((c["rank"] for c in history), default="无")
     ac_rate = f"{analysis['ac']/analysis['total']*100:.1f}%" if analysis["total"] > 0 else "无数据"
     recent = analysis["recent_ac"][:5]
-    recent_str = "
-".join(f"  - {a['pid']} [{a['rating']}] {a['name']}" for a in recent) if recent else "  无"
+    recent_str = "\n".join(f"  - {a['pid']} [{a['rating']}] {a['name']}" for a in recent) if recent else "  无"
     dist_parts = []
     for r, c in sorted(analysis["rating_dist"].items()):
         lbl = "Unrated" if r == 0 else str(r)
