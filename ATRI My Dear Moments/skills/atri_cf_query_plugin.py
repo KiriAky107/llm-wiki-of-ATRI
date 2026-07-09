@@ -257,6 +257,81 @@ def _combine_charts(paths: list, save_path: str) -> bool:
     return True
 
 
+def _build_text_report(handle: str, user_info: dict, history: list, analysis: dict) -> str:
+    """构建文本分析报告"""
+    rating = user_info.get("rating", 0)
+    max_r = user_info.get("maxRating", 0)
+    rank = user_info.get("rank", "unrated").title()
+    wins = sum(1 for c in history if c["newRating"] > c["oldRating"])
+    losses = sum(1 for c in history if c["newRating"] < c["oldRating"])
+    best_rank = min((c["rank"] for c in history), default="-")
+    s = analysis
+    ac_rate = f"{s['ac'] / s['total'] * 100:.1f}%" if s["total"] > 0 else "-"
+    lines = [
+        f"📊 CF Profile: {handle}",
+        f"━━━━━━━━━━━━━━━━━━━━",
+        f"Rating: {rating} ({rank.title()})",
+        f"最高: {max_r} ({user_info.get('maxRank', 'unrated').title()})",
+        f"参赛: {len(history)}场 | 涨{wins}掉{losses}",
+        f"最佳排名: #{best_rank}",
+        f"━━━━━━━━━━━━━━━━━━━━",
+        f"📝 刷题统计",
+        f"提交: {s['total']} | AC: {s['ac']} | AC率: {ac_rate}",
+        f"通过不同题目: {s['solved_count']}道",
+    ]
+    if s["rating_dist"]:
+        lines.append("━━━━━━━━━━━━━━━━━━━━")
+        lines.append("🎯 难度分布:")
+        for r, c in sorted(s["rating_dist"].items()):
+            lbl = "Unrated" if r == 0 else str(r)
+            lines.append(f"  {lbl:>7}: {'█'*c} {c}")
+    if s["recent_ac"]:
+        lines.append("━━━━━━━━━━━━━━━━━━━━")
+        lines.append("🔥 最近AC:")
+        for a in s["recent_ac"][:5]:
+            rtg = f"[{a['rating']}]" if a["rating"] else "[?]"
+            lines.append(f"  ✅ {a['pid']} {rtg} {a['name']}")
+    return "
+".join(lines)
+
+
+def _build_analysis_prompt(handle: str, user_info: dict, history: list, analysis: dict) -> str:
+    """构建AI分析用的prompt"""
+    rating = user_info.get("rating", 0)
+    max_r = user_info.get("maxRating", 0)
+    rank = user_info.get("rank", "unrated").title()
+    total_contests = len(history)
+    wins = sum(1 for c in history if c["newRating"] > c["oldRating"])
+    losses = sum(1 for c in history if c["newRating"] < c["oldRating"])
+    best_rank = min((c["rank"] for c in history), default="无")
+    ac_rate = f"{analysis['ac']/analysis['total']*100:.1f}%" if analysis["total"] > 0 else "无数据"
+    recent = analysis["recent_ac"][:5]
+    recent_str = "
+".join(f"  - {a['pid']} [{a['rating']}] {a['name']}" for a in recent) if recent else "  无"
+    dist_parts = []
+    for r, c in sorted(analysis["rating_dist"].items()):
+        lbl = "Unrated" if r == 0 else str(r)
+        dist_parts.append(f"{lbl}: {c}题")
+    dist_str = ", ".join(dist_parts)
+    return f"""请根据以下Codeforces用户数据，生成一段简短、有温度的分析与建议（50~100字，中文，语气像朋友聊天一样自然，不要过于正式）：
+
+用户：{handle}
+当前Rating：{rating}（{rank}）
+最高Rating：{max_r}
+参赛：{total_contests}场（涨{wins}掉{losses}）
+最佳排名：#{best_rank}
+AC率：{ac_rate}
+通过题目数：{analysis['solved_count']}道
+难度分布：{dist_str}
+最近AC：
+{recent_str}
+
+请从以下角度给出简短分析：
+1. 当前水平总结（一句话）
+2. 优势和不足
+3. 后续练习建议"""
+
+
 # ---------- 主插件类 ----------
 @register("astrbot_plugin_cf_query", "ATRI (YHN-04B-009)", "CF 查分与刷题分析，支持绑定、图表、报告", "1.0.0", "https://gitea.kronecker.cc/Kronecker/ATRI-NOTES")
 class CFQueryPlugin(Star):
