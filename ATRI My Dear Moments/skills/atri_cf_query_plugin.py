@@ -426,8 +426,8 @@ class CFQueryPlugin(Star):
                 if llm_resp and llm_resp.completion_text:
                     yield event.plain_result(llm_resp.completion_text)
             except Exception as e:
-                # AI分析失败不影响主流程
-                pass
+                # AI分析失败时打印错误但不影响主流程
+                yield event.plain_result(f"⚠️ AI分析异常: {type(e).__name__}: {e}")
             return
 
         # 没有图表时才发文本报告
