@@ -406,13 +406,28 @@ class CFQueryPlugin(Star):
 
         style = self.config.get("default_chart_style", "combined")
         if charts:
+            # 先发图表
             if style == "combined" and len(charts) >= 2:
                 combined = str(self.temp_dir / f"cf_combined_{handle}_{ts}.png")
                 if _combine_charts(charts, combined):
                     yield event.image_result(combined)
-                    return
-            for c in charts:
-                yield event.image_result(c)
+            else:
+                for c in charts:
+                    yield event.image_result(c)
+
+            # 再用AI生成分析文本
+            try:
+                analysis_prompt = _build_analysis_prompt(handle, user_info, history, analysis)
+                provider_id = self.context.get_current_chat_provider_id(event.unified_msg_origin)
+                llm_resp = await self.context.llm_generate(
+                    chat_provider_id=provider_id,
+                    prompt=analysis_prompt,
+                )
+                if llm_resp and llm_resp.completion_text:
+                    yield event.plain_result(llm_resp.completion_text)
+            except Exception as e:
+                # AI分析失败不影响主流程
+                pass
             return
 
         # 没有图表时才发文本报告
