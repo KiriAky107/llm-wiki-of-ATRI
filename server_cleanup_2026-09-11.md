@@ -46,3 +46,42 @@
 
 40G 系统盘搭配「30 天 × 550M 全量备份」策略严重不匹配——备份单项即占盘 42%。
 修正为保留 7 天后，备份稳态占用约 3.9G，留出充足冗余。
+
+---
+
+## 七、追加处置（23:55–00:00）· MongoDB 彻底移除
+
+> 主人指令：「把MongoDB也删了，然后查看一下内存占用情况」
+
+**依赖核查（删前）**
+- Halo：容器内 H2 数据库 → **不依赖 MongoDB**
+- Gitea：`[database] DB_TYPE = mysql` → MariaDB(3306) → **不依赖 MongoDB**
+- 全盘 grep 未发现任何服务连接串指向 27017
+- 仅存在人工 mongosh 会话记录（用户 `kronecker`，库 `kronecker` / `test`）
+
+**处置**
+1. `systemctl stop mongod` + `systemctl disable mongod`
+2. 数据备份 → `/backup/mongodb-backup/mongodb_20260911_235839.tar.gz`（247M）
+3. `apt purge` 卸载 8 个包（mongodb-org 全家桶 + mongosh + database-tools）
+4. 删除 `/var/lib/mongodb`、`/var/log/mongodb`、`/etc/mongod.conf`、`/root/.mongodb`
+
+**验证**
+- `pgrep mongod` 无结果 ✅ ｜ 27017 无监听 ✅ ｜ `dpkg -l | grep mongo` = 0 ✅
+- 磁盘：52% → 49%
+
+### 内存占用画像（2026-09-11 23:59）
+
+- 总 1.6G ｜ used 1.1G ｜ **available 465M** ｜ 使用率 **71.1%**
+- Swap 2.0G ｜ 已用 **0B**（swappiness=0，未触发）
+
+| 进程 | MEM% | RSS |
+|:---|:---|:---|
+| java（Halo） | 21.3% | 344M |
+| gitea | 13.0% | 210M |
+| mariadbd | 7.1% | 116M |
+| dockerd | 2.2% | 36M |
+| 阿里云盾 ×2 | 3.0% | 48M |
+
+### 附带发现（未处置）
+
+- ⚠️ `apache2.service` **failed**（enabled 但启动失败）：`/etc/apache2/conf-enabled/blog.conf` 第 3 行 `ProxyPass` 缺少 mod_proxy 模块。80/443 实际由 nginx 接管，apache2 属迁移残留。建议 `systemctl disable --now apache2` 消除 failed 报警（等主人授权）。
