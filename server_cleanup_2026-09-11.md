@@ -85,3 +85,4 @@
 ### 附带发现（未处置）
 
 - ⚠️ `apache2.service` **failed**（enabled 但启动失败）：`/etc/apache2/conf-enabled/blog.conf` 第 3 行 `ProxyPass` 缺少 mod_proxy 模块。80/443 实际由 nginx 接管，apache2 属迁移残留。建议 `systemctl disable --now apache2` 消除 failed 报警（等主人授权）。
+  - ✅ **2026-09-12 00:10 已处置**（主人「可」授权）：①备份 `blog.conf` → `/root/apache2-cleanup-20260912/blog.conf.bak`；②`a2disconf blog.conf`（移除失败配置）；③`apache2ctl configtest` → Syntax OK；④`systemctl stop + disable + reset-failed apache2` → 现 `inactive / disabled`，不再开机失败。nginx 全程 active，80/443 正常。apache2 包（约 6.6MB）暂留，如需彻底卸载可 `apt purge apache2*`。
