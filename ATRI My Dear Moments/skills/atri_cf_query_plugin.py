@@ -59,15 +59,26 @@ def _query_rating_history(handle: str) -> list:
     return result if result else []
 
 
-def _query_submissions(handle: str, count: int = 200) -> list:
-    result = _cf_api(
-        f"https://codeforces.com/api/user.status?handle={handle}&from=1&count={count}"
-    )
-    return result if result else []
+def _query_submissions(handle: str, max_total: int = 10000) -> list:
+    """分页拉取全部提交记录（CF 单次上限 10000，再多则分页继续拉）"""
+    all_subs = []
+    offset = 1
+    page_size = 10000
+    while offset <= max_total:
+        batch = _cf_api(
+            f"https://codeforces.com/api/user.status?handle={handle}&from={offset}&count={page_size}"
+        )
+        if not batch:
+            break
+        all_subs.extend(batch)
+        if len(batch) < page_size:
+            break
+        offset += page_size
+    return all_subs
 
 
 def _analyze_submissions(submissions: list) -> dict:
-    """分析提交记录，返回统计信息"""
+    """分析提交记录，返回统计信息（无评级题单独统计，不混入难度分布）"""
     total = len(submissions)
     ac = sum(1 for s in submissions if s.get("verdict") == "OK")
     wa = sum(1 for s in submissions if "WRONG_ANSWER" in s.get("verdict", ""))
@@ -77,15 +88,16 @@ def _analyze_submissions(submissions: list) -> dict:
     rating_counter = Counter()
     tag_counter = Counter()
     solved = set()
+    unrated_solved = set()
     ac_records = []
     for s in submissions:
         if s.get("verdict") == "OK":
             pid = f"{s['problem'].get('contestId', '')}{s['problem']['index']}"
-            rtg = s["problem"].get("rating", 0)
+            rtg = s["problem"].get("rating", None)
             if pid not in solved:
                 solved.add(pid)
-                rating_counter[rtg] += 1
-                for t in s["problem"].get("tags", []):
+                tags = s["problem"].get("tags", [])
+                for t in tags:
                     tag_counter[t] += 1
                 ac_records.append({
                     "pid": pid,
@@ -93,6 +105,11 @@ def _analyze_submissions(submissions: list) -> dict:
                     "rating": rtg,
                     "time": s.get("creationTimeSeconds", 0),
                 })
+                if rtg is None:
+                    # ICPC 赛制 / Gym 题没有官方难度分，单独归类
+                    unrated_solved.add(pid)
+                else:
+                    rating_counter[rtg] += 1
 
     ac_records.sort(key=lambda x: x["time"], reverse=True)
 
@@ -103,6 +120,8 @@ def _analyze_submissions(submissions: list) -> dict:
         "tle": tle,
         "ce": ce,
         "solved_count": len(solved),
+        "rated_count": len(solved) - len(unrated_solved),
+        "unrated_count": len(unrated_solved),
         "rating_dist": dict(sorted(rating_counter.items())),
         "tag_dist": dict(tag_counter.most_common(10)),
         "recent_ac": ac_records[:10],
@@ -171,11 +190,10 @@ def _generate_problem_chart(handle: str, rating_dist: dict, save_path: str) -> b
         return False
     if not rating_dist:
         return False
-    labels_map = {0: "Unrated"}
     labels, values, colors = [], [], []
     palette = ["#b0b0b0", "#8bc34a", "#4caf50", "#26a69a", "#00bcd4", "#2196f3", "#7e57c2", "#9c27b0"]
     for i, (rtg, cnt) in enumerate(sorted(rating_dist.items())):
-        labels.append(labels_map.get(rtg, str(rtg)))
+        labels.append(str(rtg))
         values.append(cnt)
         colors.append(palette[i % len(palette)])
     fig, ax = plt.subplots(figsize=(10, 5))
@@ -277,14 +295,13 @@ def _build_text_report(handle: str, user_info: dict, history: list, analysis: di
         f"━━━━━━━━━━━━━━━━━━━━",
         f"📝 刷题统计",
         f"提交: {s['total']} | AC: {s['ac']} | AC率: {ac_rate}",
-        f"通过不同题目: {s['solved_count']}道",
+        f"通过不同题目: {s['solved_count']}道（有评级 {s.get('rated_count', 0)} · 无评级 {s.get('unrated_count', 0)}）",
     ]
     if s["rating_dist"]:
         lines.append("━━━━━━━━━━━━━━━━━━━━")
         lines.append("🎯 难度分布:")
         for r, c in sorted(s["rating_dist"].items()):
-            lbl = "Unrated" if r == 0 else str(r)
-            lines.append(f"  {lbl:>7}: {'█'*c} {c}")
+            lines.append(f"  {r:>7}: {'█'*c} {c}")
     if s["recent_ac"]:
         lines.append("━━━━━━━━━━━━━━━━━━━━")
         lines.append("🔥 最近AC:")
@@ -308,8 +325,7 @@ def _build_analysis_prompt(handle: str, user_info: dict, history: list, analysis
     recent_str = "\n".join(f"  - {a['pid']} [{a['rating']}] {a['name']}" for a in recent) if recent else "  无"
     dist_parts = []
     for r, c in sorted(analysis["rating_dist"].items()):
-        lbl = "Unrated" if r == 0 else str(r)
-        dist_parts.append(f"{lbl}: {c}题")
+        dist_parts.append(f"{r}: {c}题")
     dist_str = ", ".join(dist_parts)
     return f"""请根据以下Codeforces用户数据，生成一段简短、有温度的分析与建议（50~100字，中文，语气像朋友聊天一样自然，不要过于正式）：
 
@@ -319,7 +335,7 @@ def _build_analysis_prompt(handle: str, user_info: dict, history: list, analysis
 参赛：{total_contests}场（涨{wins}掉{losses}）
 最佳排名：#{best_rank}
 AC率：{ac_rate}
-通过题目数：{analysis['solved_count']}道
+通过题目数：{analysis['solved_count']}道（其中无官方难度的赛制题 {analysis.get('unrated_count', 0)} 道）
 难度分布：{dist_str}
 最近AC：
 {recent_str}
@@ -429,7 +445,7 @@ class CFQueryPlugin(Star):
             return
 
         history = _query_rating_history(handle)
-        submissions = _query_submissions(handle, 200)
+        submissions = _query_submissions(handle)
         analysis = _analyze_submissions(submissions)
 
         # --- 文本报告 ---
@@ -448,14 +464,13 @@ class CFQueryPlugin(Star):
             f"参赛: {len(history)}场 | 涨{wins}掉{losses} | 最佳排名: #{best_rank}",
             f"━━━━━━━━━━━━━━━━━━━━",
             f"提交: {analysis['total']} | AC: {analysis['ac']} | AC率: {ac_rate}",
-            f"通过不同题目: {analysis['solved_count']}道",
+            f"通过不同题目: {analysis['solved_count']}道（有评级 {analysis.get('rated_count', 0)} · 无评级 {analysis.get('unrated_count', 0)}）",
         ]
         if analysis["rating_dist"]:
             lines.append("━━━━━━━━━━━━━━━━━━━━")
             lines.append("🎯 难度分布:")
             for r, c in sorted(analysis["rating_dist"].items()):
-                lbl = "Unrated" if r == 0 else str(r)
-                lines.append(f"  {lbl:>7}: {'█'*c} {c}")
+                lines.append(f"  {r:>7}: {'█'*c} {c}")
         if analysis["recent_ac"]:
             lines.append("━━━━━━━━━━━━━━━━━━━━")
             lines.append("🔥 最近AC:")
