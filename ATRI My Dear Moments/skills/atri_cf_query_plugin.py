@@ -311,6 +311,33 @@ def _build_text_report(handle: str, user_info: dict, history: list, analysis: di
     return "\n".join(lines)
 
 
+# Codeforces 段位表：(分数下限, 英文段位, 中文颜色)
+RANK_TIERS = [
+    (3000, "Legendary Grandmaster", "红"),
+    (2600, "International Grandmaster", "红"),
+    (2400, "Grandmaster", "红"),
+    (2300, "International Master", "橙"),
+    (2100, "Master", "橙"),
+    (1900, "Candidate Master", "紫"),
+    (1600, "Expert", "蓝"),
+    (1400, "Specialist", "青"),
+    (1200, "Pupil", "绿"),
+    (0, "Newbie", "灰"),
+]
+
+
+def _rank_tier_info(rating: int) -> tuple:
+    """返回 (当前段位英文名, 当前颜色, 下一段位英文名, 下一颜色, 距离下一段位分数)"""
+    rating = rating or 0
+    for idx, (low, name, color) in enumerate(RANK_TIERS):
+        if rating >= low:
+            if idx == 0:
+                return name, color, "已达最高段位", "-", 0
+            next_low, next_name, next_color = RANK_TIERS[idx - 1]
+            return name, color, next_name, next_color, max(0, next_low - rating)
+    return "Unrated", "灰", "Newbie", "灰", 0
+
+
 def _build_analysis_prompt(handle: str, user_info: dict, history: list, analysis: dict) -> str:
     """构建AI分析用的prompt"""
     rating = user_info.get("rating", 0)
@@ -327,10 +354,19 @@ def _build_analysis_prompt(handle: str, user_info: dict, history: list, analysis
     for r, c in sorted(analysis["rating_dist"].items()):
         dist_parts.append(f"{r}: {c}题")
     dist_str = ", ".join(dist_parts)
+    cur_name, cur_color, nxt_name, nxt_color, gap = _rank_tier_info(rating)
+    if gap > 0:
+        growth_line = (
+            f"当前段位：{cur_name}（{cur_color}）—— 已达成，**不要再建议冲这个段位**\n"
+            f"下一目标：{nxt_name}（{nxt_color}），还差 {gap} 分（该段位线 {rating + gap}）"
+        )
+    else:
+        growth_line = f"当前段位：{cur_name}（{cur_color}），已是最高段位"
     return f"""请根据以下Codeforces用户数据，生成一段简短、有温度的分析与建议（50~100字，中文，语气像朋友聊天一样自然，不要过于正式）：
 
 用户：{handle}
 当前Rating：{rating}（{rank}）
+{growth_line}
 最高Rating：{max_r}
 参赛：{total_contests}场（涨{wins}掉{losses}）
 最佳排名：#{best_rank}
@@ -340,14 +376,16 @@ AC率：{ac_rate}
 最近AC：
 {recent_str}
 
+段位速查（灰 Newbie <1200 / 绿 Pupil 1200 / 青 Specialist 1400 / 蓝 Expert 1600 / 紫 Candidate Master 1900 / 橙 Master 2100 / 红 Grandmaster 2400+）
+
 请从以下角度给出简短分析：
 1. 当前水平总结（一句话）
 2. 优势和不足
-3. 后续练习建议"""
+3. 后续练习建议（建议里的“冲X色”必须指向下一段位，不能提已达到的段位）"""
 
 
 # ---------- 主插件类 ----------
-@register("astrbot_plugin_cf_query", "ATRI (YHN-04B-009)", "CF 查分与刷题分析，支持绑定、图表、报告", "1.0.0", "https://gitea.kronecker.cc/Kronecker/ATRI-NOTES")
+@register("astrbot_plugin_cf_query", "ATRI (YHN-04B-009)", "CF 查分与刷题分析，支持绑定、图表、报告", "1.1.1", "https://gitea.kronecker.cc/Kronecker/ATRI-NOTES")
 class CFQueryPlugin(Star):
     def __init__(self, context: Context, config: dict = None):
         super().__init__(context, config)
